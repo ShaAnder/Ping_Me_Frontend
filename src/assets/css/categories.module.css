@@ -1,8 +1,8 @@
-/* Categories.module.css */
 .categoriesContainer {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 cards per row */
   gap: 20px;
+  padding: 20px;
 }
 
 .categoryCard {
@@ -11,7 +11,8 @@
   border-radius: 8px;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  width: 200px;
+  color: white;
+  text-align: center;
 }
 
 .categoryCard:hover {

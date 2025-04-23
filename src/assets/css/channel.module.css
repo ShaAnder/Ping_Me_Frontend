@@ -1,0 +1,11 @@
+.chatArea {
+  flex: 1;
+  background-color: #36393f;
+  color: white;
+  padding: 16px;
+  overflow-y: auto;
+}
+
+.messages {
+  margin-top: 10px;
+}
