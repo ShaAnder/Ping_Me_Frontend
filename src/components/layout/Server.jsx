@@ -4,7 +4,7 @@ import ChannelList from "../guild/ChannelList";
 import Channel from "../guild/Channel";
 import MemberList from "../guild/MemberList";
 
-import styles from "../../assets/css/server.module.css";
+import styles from "../../assets/css/Server.module.css";
 
 function Server() {
   return (

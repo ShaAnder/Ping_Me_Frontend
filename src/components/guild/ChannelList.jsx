@@ -1,4 +1,4 @@
-import styles from "../../assets/css/channelList.module.css";
+import styles from "../../assets/css/ChannelList.module.css";
 import dummyUser from "../../dummyData/dummyUserData";
 
 function ChannelList({ serverId }) {

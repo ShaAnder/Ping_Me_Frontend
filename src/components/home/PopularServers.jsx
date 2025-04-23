@@ -1,4 +1,4 @@
-import styles from "../../assets/css/popularServers.module.css";
+import styles from "../../assets/css/PopularServers.module.css";
 import dummyUser from "../../dummyData/dummyUserData";
 
 function PopularServers({ category }) {

@@ -5,7 +5,7 @@ import PopularServers from "../home/PopularServers";
 
 import React, { useState } from "react";
 
-import styles from "../../assets/css/home.module.css";
+import styles from "../../assets/css/Home.module.css";
 
 function Home() {
   const [selectedCategory, setSelectedCategory] = useState(null);

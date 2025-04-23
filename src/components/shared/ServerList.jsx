@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import styles from "../../assets/css/serverList.module.css";
+import styles from "../../assets/css/ServerList.module.css";
 import dummyUser from "../../dummyData/dummyUserData";
 
 function ServerList() {
