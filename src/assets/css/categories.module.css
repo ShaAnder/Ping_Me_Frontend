@@ -1,0 +1,19 @@
+/* Categories.module.css */
+.categoriesContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.categoryCard {
+  background-color: #40444b;
+  padding: 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 200px;
+}
+
+.categoryCard:hover {
+  background-color: #7289da;
+}

@@ -1,0 +1,15 @@
+/* PopularServers.module.css */
+.popularServersContainer {
+  background-color: #40444b;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+li {
+  margin-bottom: 10px;
+}

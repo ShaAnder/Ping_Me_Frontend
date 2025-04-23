@@ -1,0 +1,29 @@
+.navbar {
+  height: 50px;
+  background-color: #202225;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 1rem;
+  border-bottom: 1px solid #36393f;
+}
+
+.leftSpacer {
+  width: 120px;
+}
+
+.title {
+  text-align: center;
+  flex: 1;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.iconGroup {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: flex-end;
+  width: 120px;
+}

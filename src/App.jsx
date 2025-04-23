@@ -1,4 +1,4 @@
-import "./App.css";
+import "./App.Module.css";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -6,12 +6,15 @@ import {
   RouterProvider,
 } from "react-router";
 
-import Home from "./pages/Home";
+import Home from "./components/layout/Home";
+
+import Server from "./components/layout/Server";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
       <Route path="/" element={<Home />} />
+      <Route path="/server/:serverId" element={<Server />} />
     </Route>
   )
 );
