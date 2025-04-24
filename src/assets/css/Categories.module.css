@@ -33,6 +33,7 @@ hr {
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  text-transform: capitalize;
 }
 
 .categoryButton:hover {

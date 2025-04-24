@@ -34,7 +34,7 @@ const useCrud = (initialData, apiURL) => {
     [fetchData]
   );
 
-  return { debouncedFetchData, dataCRUD, err, isLoading };
+  return { fetchData, debouncedFetchData, dataCRUD, err, isLoading };
 };
 
 export default useCrud;

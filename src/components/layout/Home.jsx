@@ -1,23 +1,29 @@
 import NavMain from "../shared/Nav";
 import ServerList from "../shared/ServerList";
 import Categories from "../home/Categories";
-import PopularServers from "../home/PopularServers";
-
-import React, { useState } from "react";
+import ServerByCategory from "../home/ServerByCategory";
+import useCrud from "../../hooks/useCrud";
+import { useState, useEffect } from "react";
+import PopularServersHeader from "../home/PopularServersHeader";
 
 import styles from "../../assets/css/Home.module.css";
-
-import dummyUser from "../../dummyData/dummyUserData";
 
 function Home() {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const categories = Array.from(
-    new Set(dummyUser.servers.map((server) => server.category))
-  );
+  const {
+    fetchData: loadCategories,
+    dataCRUD: categories,
+    isLoading: loadingCats,
+    err: catsErr,
+  } = useCrud([], "/api/categories/");
 
-  const handleCategorySelect = (category) => {
-    setSelectedCategory(category);
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  const handleCategorySelect = (cat) => {
+    setSelectedCategory(cat);
   };
 
   return (
@@ -25,24 +31,26 @@ function Home() {
       <NavMain />
       <div className={styles.homeContainer}>
         <ServerList />
-        <div className={styles.categoryPanel}>
+        <aside className={styles.categoryPanel}>
           <Categories
             categories={categories}
             onSelectCategory={handleCategorySelect}
             selected={selectedCategory}
+            loading={loadingCats}
+            error={catsErr}
           />
-        </div>
-        <div className={styles.contentArea}>
-          {selectedCategory ? (
-            <PopularServers
-              servers={dummyUser.servers.filter(
-                (server) => server.category === selectedCategory
-              )}
-            />
-          ) : (
-            ""
-          )}
-        </div>
+        </aside>
+        <main className={styles.contentArea}>
+          <PopularServersHeader category={selectedCategory} />
+
+          {loadingCats ? (
+            <div className={styles.loaderContainer}>
+              <div className={styles.loader}></div>
+            </div>
+          ) : selectedCategory ? (
+            <ServerByCategory category={selectedCategory} />
+          ) : null}
+        </main>
       </div>
     </>
   );

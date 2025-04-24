@@ -7,13 +7,13 @@ function Categories({ categories, onSelectCategory, selected }) {
       <hr></hr>
       {categories.map((cat) => (
         <button
-          key={cat}
+          key={cat.id}
           className={`${styles.categoryButton} ${
-            selected === cat ? styles.active : ""
+            selected === cat.name ? styles.active : ""
           }`}
-          onClick={() => onSelectCategory(cat)}
+          onClick={() => onSelectCategory(cat.name)}
         >
-          {cat}
+          {cat.name}
         </button>
       ))}
     </div>
