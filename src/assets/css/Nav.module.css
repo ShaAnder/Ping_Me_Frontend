@@ -6,7 +6,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 0 1rem;
-  border-bottom: 1px solid #36393f;
+  border: 1px solid;
+  border-color: #454546;
 }
 
 .leftSpacer {

@@ -5,7 +5,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 10px;
+  border: 1px solid;
   padding-top: 10px;
+  border-color: #454546;
 }
 
 /* Server item container */

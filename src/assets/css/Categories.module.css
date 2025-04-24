@@ -1,20 +1,45 @@
-.categoriesContainer {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 cards per row */
-  gap: 20px;
-  padding: 20px;
+.selectorWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: 100%;
+  border: 1px solid;
+  border-color: #454546;
 }
 
-.categoryCard {
-  background-color: #40444b;
-  padding: 20px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.selectorWrapper h2 {
   color: white;
-  text-align: center;
+  margin: 0 !important;
+  padding-left: 1rem;
+  padding-top: 1rem;
+  font-size: 2rem;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-.categoryCard:hover {
-  background-color: #7289da;
+hr {
+  width: 100%;
+  margin: 0 !important;
+  border-color: #454546;
+  padding: 0 !important;
+}
+
+.categoryButton {
+  background-color: transparent;
+  color: white;
+  border: none;
+  padding: 1rem;
+  text-align: left;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.categoryButton:hover {
+  background-color: #ffc14d;
+}
+
+.active {
+  background-color: #ffc14d;
+  color: #454546;
 }

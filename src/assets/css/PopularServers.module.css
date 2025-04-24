@@ -1,15 +1,20 @@
-/* PopularServers.module.css */
 .popularServersContainer {
-  background-color: #40444b;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
   padding: 20px;
+}
+
+.serverCard {
+  text-align: left;
+  color: white;
+}
+
+.serverIcon {
+  width: 128px;
+  height: 128px;
   border-radius: 8px;
-}
-
-ul {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-li {
-  margin-bottom: 10px;
+  object-fit: cover;
+  background-color: #2c2f33;
+  margin-bottom: 8px;
 }

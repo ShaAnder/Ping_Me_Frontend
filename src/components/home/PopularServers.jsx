@@ -1,19 +1,18 @@
-import styles from "../../assets/css/PopularServers.module.css";
-import dummyUser from "../../dummyData/dummyUserData";
+import styles from "../../assets/css/popularServers.module.css";
 
-function PopularServers({ category }) {
-  const servers = dummyUser.servers.filter((s) => s.category === category);
-
+function PopularServers({ servers }) {
   return (
-    <div className={styles.container}>
-      <h3 className={styles.title}>Popular Servers in {category}</h3>
-      <ul className={styles.list}>
-        {servers.map((server) => (
-          <li key={server.id} className={styles.item}>
-            {server.name}
-          </li>
-        ))}
-      </ul>
+    <div className={styles.popularServersContainer}>
+      {servers.map((server) => (
+        <div key={server.id} className={styles.serverCard}>
+          <img
+            src={server.iconUrl || "/placeholder.jpg"}
+            alt={server.name}
+            className={styles.serverIcon}
+          />
+          <div>{server.name}</div>
+        </div>
+      ))}
     </div>
   );
 }

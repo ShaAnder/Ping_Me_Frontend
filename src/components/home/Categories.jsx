@@ -1,28 +1,20 @@
-import React from "react";
 import styles from "../../assets/css/Categories.module.css";
-import dummyUser from "../../dummyData/dummyUserData";
 
-function Categories({ onSelect }) {
-  // Derive unique categories from server list
-  const categories = Array.from(
-    new Set(dummyUser.servers.map((s) => s.category))
-  ).map((category, index) => ({
-    id: index + 1,
-    name: category,
-    description: `${category} games and guilds`,
-  }));
-
+function Categories({ categories, onSelectCategory, selected }) {
   return (
-    <div className={styles.categoriesContainer}>
+    <div className={styles.selectorWrapper}>
+      <h2>Explore</h2>
+      <hr></hr>
       {categories.map((cat) => (
-        <div
-          key={cat.id}
-          className={styles.categoryCard}
-          onClick={() => onSelect(cat.name)}
+        <button
+          key={cat}
+          className={`${styles.categoryButton} ${
+            selected === cat ? styles.active : ""
+          }`}
+          onClick={() => onSelectCategory(cat)}
         >
-          <h3>{cat.name}</h3>
-          <p>{cat.description}</p>
-        </div>
+          {cat}
+        </button>
       ))}
     </div>
   );

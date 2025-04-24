@@ -7,34 +7,44 @@ import React, { useState } from "react";
 
 import styles from "../../assets/css/Home.module.css";
 
+import dummyUser from "../../dummyData/dummyUserData";
+
 function Home() {
   const [selectedCategory, setSelectedCategory] = useState(null);
 
-  const handleCategoryClick = (category) => {
+  const categories = Array.from(
+    new Set(dummyUser.servers.map((server) => server.category))
+  );
+
+  const handleCategorySelect = (category) => {
     setSelectedCategory(category);
   };
 
   return (
     <>
       <NavMain />
-      <div style={{ display: "flex", height: "calc(100vh - 50px)" }}>
+      <div className={styles.homeContainer}>
         <ServerList />
-        {/* Home content */}
-        <div className={styles.mainContent}>
-          {/* exploration text here */}
-          <Categories onCategoryClick={handleCategoryClick} />
+        <div className={styles.categoryPanel}>
+          <Categories
+            categories={categories}
+            onSelectCategory={handleCategorySelect}
+            selected={selectedCategory}
+          />
         </div>
-        {/* Right Panel: Popular Servers Section */}
-        <div className={styles.rightPanel}>
+        <div className={styles.contentArea}>
           {selectedCategory ? (
-            <PopularServers category={selectedCategory} />
+            <PopularServers
+              servers={dummyUser.servers.filter(
+                (server) => server.category === selectedCategory
+              )}
+            />
           ) : (
-            <p>Select a category to see popular servers</p>
+            ""
           )}
         </div>
       </div>
     </>
   );
 }
-
 export default Home;

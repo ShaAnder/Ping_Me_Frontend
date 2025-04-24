@@ -1,19 +1,16 @@
-/* Home.module.css */
 .homeContainer {
   display: flex;
   height: calc(100vh - 50px);
-  background-color: lightblue; /* Just for debugging */
 }
 
-.mainContent {
-  flex-grow: 1;
-  padding: 20px;
-  background-color: #181a1b;
-}
-
-.rightPanel {
-  width: 300px;
+.categoryPanel {
+  width: 200px;
   background-color: #2f3136;
+}
+
+.contentArea {
+  flex: 1;
+  background-color: #36393f;
   padding: 20px;
-  color: white;
+  overflow-y: auto;
 }
