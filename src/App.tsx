@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 
 import Home from "./pages/Home";
-import { ThemeProvider } from "@emotion/react";
+import { ThemeProvider } from "@mui/material/styles";
 import { createMuiTheme } from "./theme/Theme";
 
 const router = createBrowserRouter(
@@ -18,7 +18,7 @@ const router = createBrowserRouter(
 );
 
 const App: React.FC = () => {
-  const theme = createMuiTheme;
+  const theme = createMuiTheme();
   return (
     <>
       <ThemeProvider theme={theme}>
