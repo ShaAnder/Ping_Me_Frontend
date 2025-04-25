@@ -1,30 +1,27 @@
-import "./App.Module.css";
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
+  Router,
   RouterProvider,
-} from "react-router";
+} from "react-router-dom";
 
-import Home from "./components/layout/Home";
-
-import Server from "./components/layout/Server";
+import Home from "./pages/Home";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
       <Route path="/" element={<Home />} />
-      <Route path="/server/:serverId" element={<Server />} />
     </Route>
   )
 );
 
-function App() {
+const App: React.FC = () => {
   return (
     <>
       <RouterProvider router={router} />
     </>
   );
-}
+};
 
 export default App;

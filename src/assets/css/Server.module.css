@@ -1,5 +1,0 @@
-.serverContainer {
-  display: flex;
-  height: calc(100vh - 50px); /* Account for NavMain height */
-  overflow: hidden;
-}
