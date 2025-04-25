@@ -1,12 +1,12 @@
-import React from "react";
-
 import { Box, CssBaseline } from "@mui/material";
+
+import Nav from "./templates/Nav";
 
 function Home() {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      Home
+      <Nav />
     </Box>
   );
 }

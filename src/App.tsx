@@ -2,11 +2,12 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-  Router,
   RouterProvider,
 } from "react-router-dom";
 
 import Home from "./pages/Home";
+import { ThemeProvider } from "@emotion/react";
+import { createMuiTheme } from "./theme/Theme";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -17,9 +18,12 @@ const router = createBrowserRouter(
 );
 
 const App: React.FC = () => {
+  const theme = createMuiTheme;
   return (
     <>
-      <RouterProvider router={router} />
+      <ThemeProvider theme={theme}>
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </>
   );
 };
