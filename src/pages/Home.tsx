@@ -1,7 +1,14 @@
 import React from "react";
 
+import { Box, CssBaseline } from "@mui/material";
+
 function Home() {
-  return <div>Home</div>;
+  return (
+    <Box sx={{ display: "flex" }}>
+      <CssBaseline />
+      Home
+    </Box>
+  );
 }
 
 export default Home;
