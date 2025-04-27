@@ -1,25 +1,43 @@
-import { createTheme } from "@mui/material";
+import { createTheme, responsiveFontSizes } from "@mui/material";
 
 declare module "@mui/material/styles" {
   interface Theme {
     nav: {
       height: number;
     };
+    serverList: {
+      width: number;
+    };
+    primaryDraw: {
+      width: number;
+    };
   }
   interface ThemeOptions {
     nav?: {
       height?: number;
     };
+    serverList: {
+      width?: number;
+    };
+    primaryDraw: {
+      width?: number;
+    };
   }
 }
 
 export const createMuiTheme = () => {
-  const theme = createTheme({
+  let theme = createTheme({
     typography: {
       fontFamily: ["IBM Plex Sans", "sans-serif"].join(","),
     },
     nav: {
       height: 50,
+    },
+    serverList: {
+      width: 72,
+    },
+    primaryDraw: {
+      width: 240,
     },
     components: {
       MuiAppBar: {
@@ -30,6 +48,7 @@ export const createMuiTheme = () => {
       },
     },
   });
+  theme = responsiveFontSizes(theme);
   return theme;
 };
 

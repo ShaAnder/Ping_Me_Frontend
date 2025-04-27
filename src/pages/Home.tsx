@@ -1,14 +1,26 @@
-import { Box, CssBaseline } from "@mui/material";
+import { Box } from "@mui/material";
 
 import Nav from "./templates/Nav";
+import ServerList from "./templates/ServerList";
+import PrimaryDraw from "./templates/PrimaryDraw";
+import Main from "./templates/Main";
 
-function Home() {
+const Home = () => {
   return (
-    <Box sx={{ display: "flex" }}>
-      <CssBaseline />
+    <>
       <Nav />
-    </Box>
+      <Box sx={{ display: "flex", width: "100%" }}>
+        {/* Sidebar - Server List */}
+        <ServerList />
+
+        {/* Explore Section - Primary Drawer */}
+        <PrimaryDraw />
+
+        {/* Drawer - Popular Servers */}
+        <Main />
+      </Box>
+    </>
   );
-}
+};
 
 export default Home;
