@@ -1,11 +1,14 @@
-import { Box, Typography, Drawer } from "@mui/material";
-import { useState } from "react";
+import { Box, Drawer } from "@mui/material";
+import { ReactNode } from "react";
 import { useTheme } from "@mui/material/styles";
 
-const ServerList = () => {
+type Props = {
+  children: ReactNode;
+};
+
+const ServerList: React.FC<Props> = ({ children }) => {
   // server list always visible, we populate the users servers on here
   const theme = useTheme();
-  const [selectedServer, setSelectedServer] = useState<number | null>(null);
 
   return (
     <>
@@ -34,11 +37,7 @@ const ServerList = () => {
             scrollbarWidth: "none", // Firefox
           }}
         >
-          {[...Array(100)].map((_, i) => (
-            <Typography key={i} paragraph>
-              {i + 1}
-            </Typography>
-          ))}
+          {children}
         </Box>
       </Drawer>
     </>

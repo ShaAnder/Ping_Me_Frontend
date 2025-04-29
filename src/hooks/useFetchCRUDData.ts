@@ -23,6 +23,7 @@ const useCrud = <T>(initialData: T[], apiURL: string): IuseCrud<T> => {
       const response = await jwt.get(`${BASE_URL}/api${apiURL}`, {});
       const data = response.data;
       setDataCRUD(data);
+      console.log("Fetched data:", data);
       setError(null);
       return data;
     } catch (error: unknown) {

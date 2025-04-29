@@ -5,14 +5,17 @@ import ServerList from "./templates/ServerList";
 import PrimaryDraw from "./templates/PrimaryDraw";
 import Main from "./templates/Main";
 
+import Server from "../components/serverList/Server";
+
 const Home = () => {
   return (
     <>
       <Nav />
       <Box sx={{ display: "flex", width: "100%" }}>
         {/* Sidebar - Server List */}
-        <ServerList />
-
+        <ServerList>
+          <Server />
+        </ServerList>
         {/* Explore Section - Primary Drawer */}
         <PrimaryDraw />
 

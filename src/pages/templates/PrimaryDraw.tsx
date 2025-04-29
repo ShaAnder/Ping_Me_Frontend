@@ -1,12 +1,10 @@
 import { Box, Typography, Drawer } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { useState } from "react";
 
 const PrimaryDraw = () => {
   const theme = useTheme();
   // This is the primary draw template, will cover the drawing of either categories
   // or the channels in server view
-  const [open, setOpen] = useState(true);
 
   return (
     <>
