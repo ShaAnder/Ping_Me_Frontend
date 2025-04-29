@@ -15,7 +15,7 @@ const useJWTAxiosInterceptor = (): AxiosInstance => {
       return response;
     },
     async (err) => {
-      const originalRequest = err.config;
+      // const originalRequest = err.config;
       if (err.response?.status === 401) {
         const redirectHome = () => navigate("/");
         redirectHome();
