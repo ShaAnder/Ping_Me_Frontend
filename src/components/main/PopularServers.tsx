@@ -4,7 +4,7 @@ import {
   ListItemIcon,
   ListItemText,
   Box,
-  Typeography,
+  Typography,
 } from "@mui/material";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -30,11 +30,43 @@ interface PopularServer {
 
 const ExplorePopularServers = () => {
   const { categoryName } = useParams();
-  const { dataCRUD, error, loading, fetchData } = useCrud<PopularServer>(
-    [],
-    "/server_list/select/"
+  const url = categoryName
+    ? `/server/select/>category=${categoryName}`
+    : "/server/select/";
+  const { dataCRUD, fetchData } = useCrud<PopularServer>([], url);
+
+  useEffect(() => {
+    fetchData();
+  }, [categoryName]);
+
+  return (
+    <>
+      <Container maxWidth="lg">
+        <Box sx={{ pt: 6 }}>
+          <Typography
+            variant="h3"
+            noWrap
+            component="h1"
+            sx={{
+              display: {
+                sm: "block",
+                fontWeight: 700,
+                fontSize: "48",
+                letterSpace: "-2",
+              },
+              textAlign: { xs: "center", sm: "left" },
+            }}
+          >
+            {categoryName
+              ? `Explore ${
+                  categoryName.charAt(0).toUpperCase() + categoryName.slice(1)
+                } Servers`
+              : "All Popular Servers"}
+          </Typography>
+        </Box>
+      </Container>
+    </>
   );
-  return <></>;
 };
 
 export default ExplorePopularServers;

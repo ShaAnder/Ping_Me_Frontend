@@ -7,7 +7,6 @@ import {
   useTheme,
   ListItemIcon,
   Typography,
-  capitalize,
 } from "@mui/material";
 import useCrud from "../../hooks/useFetchCRUDData";
 import { useEffect } from "react";
@@ -61,7 +60,7 @@ const Explore = () => {
             dense={true}
           >
             <Link
-              to={`/explort/${item.name}`}
+              to={`/explore/${item.name}`}
               style={{ textDecoration: "none", color: "inherit" }}
             >
               <ListItemButton sx={{ minHeight: 48, fontFamily: "verdana" }}>

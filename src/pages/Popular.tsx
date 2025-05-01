@@ -9,7 +9,7 @@ import UserServer from "../components/serverList/UserServers";
 import Explore from "../components/primaryDraw/Explore";
 import ExplorePopularServers from "../components/main/popularServers";
 
-const Home = () => {
+const Popular = () => {
   return (
     <>
       <Nav />
@@ -32,4 +32,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Popular;

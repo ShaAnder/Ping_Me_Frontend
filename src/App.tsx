@@ -6,18 +6,15 @@ import {
 } from "react-router-dom";
 
 import Home from "./pages/Home";
+import Popular from "./pages/Popular";
 import { ThemeProvider } from "@mui/material/styles";
 import { createMuiTheme } from "./theme/Theme";
-import ExplorePopularServers from "./components/main/popularServers";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
       <Route path="/" element={<Home />} />
-      <Route
-        path="/popular/:categoryName"
-        element={<ExplorePopularServers />}
-      />
+      <Route path="/explore/:categoryName" element={<Popular />} />
     </Route>
   )
 );
