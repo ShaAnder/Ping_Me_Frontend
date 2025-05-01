@@ -7,6 +7,7 @@ import {
   useTheme,
   ListItemIcon,
   Typography,
+  capitalize,
 } from "@mui/material";
 import useCrud from "../../hooks/useFetchCRUDData";
 import { useEffect } from "react";
@@ -38,7 +39,10 @@ const Explore = () => {
           height: "50px",
           display: "flex",
           alignItems: "center",
-          px: 2,
+          px: 4,
+          fontSize: 16,
+          letterSpacing: 1,
+          fontFamily: "verdana",
           borderBottom: `1px solid ${theme.palette.divider}`,
           position: "sticky",
           top: 0,
@@ -60,7 +64,7 @@ const Explore = () => {
               to={`/explort/${item.name}`}
               style={{ textDecoration: "none", color: "inherit" }}
             >
-              <ListItemButton sx={{ minHeight: 48 }}>
+              <ListItemButton sx={{ minHeight: 48, fontFamily: "verdana" }}>
                 <ListItemIcon sx={{ justifyContent: "center" }}>
                   <ListItemAvatar
                     sx={{ minWidth: 0, alignItems: "center", display: "flex" }}
@@ -78,7 +82,7 @@ const Explore = () => {
                     />
                   </ListItemAvatar>
                 </ListItemIcon>
-                {item.name}
+                {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
               </ListItemButton>
             </Link>
           </ListItem>
