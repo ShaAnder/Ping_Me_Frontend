@@ -2,11 +2,11 @@ import { Box, Drawer } from "@mui/material";
 import { ReactNode } from "react";
 import { useTheme } from "@mui/material/styles";
 
-type Props = {
+type ServerListProps = {
   children: ReactNode;
 };
 
-const ServerList: React.FC<Props> = ({ children }) => {
+const ServerList = ({ children }: ServerListProps) => {
   // server list always visible, we populate the users servers on here
   const theme = useTheme();
 

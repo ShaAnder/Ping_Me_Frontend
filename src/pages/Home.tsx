@@ -6,6 +6,7 @@ import PrimaryDraw from "./templates/PrimaryDraw";
 import Main from "./templates/Main";
 
 import UserServer from "../components/serverList/UserServers";
+import Explore from "../components/primaryDraw/Explore";
 
 const Home = () => {
   return (
@@ -17,7 +18,9 @@ const Home = () => {
           <UserServer />
         </ServerList>
         {/* Explore Section - Primary Drawer */}
-        <PrimaryDraw />
+        <PrimaryDraw>
+          <Explore />
+        </PrimaryDraw>
 
         {/* Drawer - Popular Servers */}
         <Main />

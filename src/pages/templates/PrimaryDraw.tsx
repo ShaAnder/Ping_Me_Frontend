@@ -1,7 +1,12 @@
-import { Box, Typography, Drawer } from "@mui/material";
+import { Box, Drawer } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { ReactNode } from "react";
 
-const PrimaryDraw = () => {
+type PrimaryDrawProps = {
+  children: ReactNode;
+};
+
+const PrimaryDraw = ({ children }: PrimaryDrawProps) => {
   const theme = useTheme();
   // This is the primary draw template, will cover the drawing of either categories
   // or the channels in server view
@@ -34,11 +39,7 @@ const PrimaryDraw = () => {
             scrollbarWidth: "none", // Firefox
           }}
         >
-          {[...Array(100)].map((_, i) => (
-            <Typography key={i} paragraph>
-              {i + 1}
-            </Typography>
-          ))}
+          {children}
         </Box>
       </Drawer>
     </>
