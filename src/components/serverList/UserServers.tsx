@@ -1,4 +1,11 @@
-import { List, ListItem, ListItemButton, ListItemIcon } from "@mui/material";
+import {
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  Box,
+  Divider,
+} from "@mui/material";
 import useCrud from "../../hooks/useFetchCRUDData";
 import { useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
@@ -14,8 +21,11 @@ interface Server {
   };
 }
 
-const Server: React.FC = () => {
-  const { dataCRUD, error, isLoading, fetchData } = useCrud<Server>(
+import home from "../../assets/img/home.png";
+import plus from "../../assets/img/plus.png";
+
+const UserServer: React.FC = () => {
+  const { dataCRUD, error, loading, fetchData } = useCrud<Server>(
     [],
     "/server_list/select/"
   );
@@ -26,6 +36,103 @@ const Server: React.FC = () => {
 
   return (
     <List>
+      {/* Static: Home */}
+      <ListItem disablePadding sx={{ display: "block" }} dense>
+        <ListItemButton
+          component={Link}
+          to="/"
+          sx={{
+            minHeight: 60,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ListItemIcon
+            sx={{
+              minWidth: "auto",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Box
+              sx={{
+                width: 48,
+                height: 48,
+                backgroundColor: "#36393f",
+                borderRadius: 3,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "background-color 0.3s ease",
+                "&:hover": {
+                  backgroundColor: "#5865F2",
+                },
+              }}
+            >
+              <Avatar
+                alt="Home"
+                src={home}
+                sx={{
+                  width: 40,
+                  height: 40,
+                  filter: "invert(1) sepia(1) saturate(5) hue-rotate(180deg)",
+                }}
+              />
+            </Box>
+          </ListItemIcon>
+        </ListItemButton>
+      </ListItem>
+
+      {/* Static: Add Server */}
+      <ListItem disablePadding sx={{ display: "block" }} dense>
+        <ListItemButton
+          component={Link}
+          to="/create-or-join"
+          sx={{
+            minHeight: 60,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <ListItemIcon
+            sx={{
+              minWidth: "auto",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Box
+              sx={{
+                width: 48,
+                height: 48,
+                backgroundColor: "	#36393f",
+                borderRadius: 3,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "background-color 0.3s ease",
+                "&:hover": {
+                  backgroundColor: "#5865F2",
+                },
+              }}
+            >
+              <Avatar
+                alt="Add Server"
+                src={plus}
+                sx={{
+                  width: 32,
+                  height: 32,
+                  filter: "invert(1) sepia(1) saturate(5) hue-rotate(180deg)",
+                }}
+              />
+            </Box>
+          </ListItemIcon>
+        </ListItemButton>
+      </ListItem>
+
+      <Divider sx={{ my: 1 }} />
       {dataCRUD.map((item) => (
         <ListItem
           key={item.id}
@@ -56,7 +163,7 @@ const Server: React.FC = () => {
                 <Avatar
                   alt="Server Icon"
                   src={`${item.server_image_urls.server_icon_url}`}
-                  sx={{ width: 48, height: 48 }}
+                  sx={{ width: 48, height: 48, borderRadius: 3 }}
                 />
               </ListItemIcon>
             </ListItemButton>
@@ -67,4 +174,4 @@ const Server: React.FC = () => {
   );
 };
 
-export default Server;
+export default UserServer;

@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 
 const Explore = () => {
+  const { dataCRUD, error, loading, fetchData };
   return <></>;
 };
 

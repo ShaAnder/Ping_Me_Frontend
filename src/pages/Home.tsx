@@ -5,7 +5,7 @@ import ServerList from "./templates/ServerList";
 import PrimaryDraw from "./templates/PrimaryDraw";
 import Main from "./templates/Main";
 
-import Server from "../components/serverList/UserServers";
+import UserServer from "../components/serverList/UserServers";
 
 const Home = () => {
   return (
@@ -14,7 +14,7 @@ const Home = () => {
       <Box sx={{ display: "flex", width: "100%" }}>
         {/* Sidebar - Server List */}
         <ServerList>
-          <UserServers />
+          <UserServer />
         </ServerList>
         {/* Explore Section - Primary Drawer */}
         <PrimaryDraw />
