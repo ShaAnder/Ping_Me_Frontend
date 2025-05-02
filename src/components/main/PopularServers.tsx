@@ -31,8 +31,8 @@ interface PopularServer {
 const ExplorePopularServers = () => {
   const { categoryName } = useParams();
   const url = categoryName
-    ? `/server/select/>category=${categoryName}`
-    : "/server/select/";
+    ? `/server_list/select/?category=${categoryName}`
+    : "/server_list/select/";
   const { dataCRUD, fetchData } = useCrud<PopularServer>([], url);
 
   useEffect(() => {
@@ -42,7 +42,7 @@ const ExplorePopularServers = () => {
   return (
     <>
       <Container maxWidth="lg">
-        <Box sx={{ pt: 6 }}>
+        <Box sx={{ pt: 4 }}>
           <Typography
             variant="h3"
             noWrap
@@ -64,6 +64,43 @@ const ExplorePopularServers = () => {
               : "All Popular Servers"}
           </Typography>
         </Box>
+        <Box>
+          <Typography
+            variant="h6"
+            noWrap
+            component="h2"
+            sx={{
+              display: {
+                sm: "block",
+                fontWeight: 700,
+                fontSize: "40",
+                letterSpace: "-2",
+              },
+              textAlign: { xs: "center", sm: "left" },
+              opacity: 0.6,
+            }}
+          >
+            {categoryName
+              ? `Talking about all things ${
+                  categoryName.charAt(0).toUpperCase() + categoryName.slice(1)
+                }`
+              : "Here's all of the most popular servers!"}
+          </Typography>
+        </Box>
+        <Grid container spacing={2}>
+          {dataCRUD.map((item) => (
+            <Grid
+              item // Boolean prop (no value needed)
+              key={item.id}
+              xs={12}
+              sm={6}
+              md={4}
+              lg={3}
+            >
+              {/* Your content here */}
+            </Grid>
+          ))}
+        </Grid>
       </Container>
     </>
   );

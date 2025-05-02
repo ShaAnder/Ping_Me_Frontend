@@ -1,7 +1,6 @@
 import { useState } from "react";
 import useJWTAxiosInterceptor from "../api/jwtinterceptor";
 import { BASE_URL } from "../api/config";
-import axios from "axios";
 
 interface IuseCrud<T> {
   dataCRUD: T[];
@@ -18,19 +17,17 @@ const useCrud = <T>(initialData: T[], apiURL: string): IuseCrud<T> => {
 
   const fetchData = async () => {
     setLoading(true);
-    //logic
     try {
-      const response = await jwt.get(`${BASE_URL}/api${apiURL}`, {});
-      const data = response.data;
+      const response = await jwt.get(`${BASE_URL}/api${apiURL}`);
+      const data = response?.data ?? [];
       setDataCRUD(data);
-      console.log("Fetched data:", data);
       setError(null);
       return data;
     } catch (error: unknown) {
-      if (axios.isAxiosError(error) && error.response?.status === 400) {
-        setError(new Error("400"));
-      }
-      throw error;
+      console.error("Fetch error:", error);
+      setError(error instanceof Error ? error : new Error("Unknown error"));
+      setDataCRUD([]); // fallback
+      return []; // avoid unhandled promise rejection
     } finally {
       setLoading(false);
     }
