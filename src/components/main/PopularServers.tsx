@@ -1,18 +1,8 @@
-import {
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Box,
-  Typography,
-} from "@mui/material";
+import { ListItemText, Box, Typography } from "@mui/material";
 import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Avatar from "@mui/material/Avatar";
 import { useParams } from "react-router-dom";
 import useCrud from "../../hooks/useFetchCRUDData";
 import { useEffect } from "react";
@@ -21,7 +11,7 @@ import { Link } from "react-router-dom";
 interface PopularServer {
   id: number;
   name: string;
-  category: string;
+  category_name: string;
   server_image_urls: {
     server_icon_url: string;
     banner_image_url: string;
@@ -89,15 +79,84 @@ const ExplorePopularServers = () => {
         </Box>
         <Grid container spacing={2}>
           {dataCRUD.map((item) => (
-            <Grid
-              item // Boolean prop (no value needed)
-              key={item.id}
-              xs={12}
-              sm={6}
-              md={4}
-              lg={3}
-            >
-              {/* Your content here */}
+            <Grid key={item.id} xs={12} sm={6} md={4} lg={3}>
+              <Card
+                sx={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  boxShadow: "none",
+                  backgroundImage: "none",
+                }}
+              >
+                <Link
+                  to={`/server/${item.id}`}
+                  style={{ textDecoration: "none", color: "inherit" }}
+                >
+                  <Box sx={{ position: "relative", width: "300px", mt: 3 }}>
+                    <CardMedia
+                      component="img"
+                      image={item.server_image_urls.banner_image_url}
+                      alt="server banner image"
+                      sx={{
+                        display: { xs: "none", sm: "block" },
+                        width: "98%",
+                        borderRadius: 2,
+                        border: "2px solid gray",
+                      }}
+                    />
+
+                    <CardMedia
+                      component="img"
+                      image={item.server_image_urls.server_icon_url}
+                      alt="server icon"
+                      sx={{
+                        display: { xs: "none", sm: "flex" },
+                        width: "40px",
+                        height: "40px",
+                        borderRadius: 2,
+
+                        position: "absolute",
+                        bottom: 8,
+                        left: 8,
+                        backgroundColor: "white",
+                        border: "2px solid white",
+                      }}
+                    />
+                  </Box>
+                  <ListItemText
+                    primary={
+                      <Typography
+                        variant="body2"
+                        textAlign="start"
+                        sx={{
+                          textOverflow: "ellipsis",
+                          overflow: "hidden",
+                          whiteSpace: "nowrap",
+                          fontSize: 20,
+                          fontFamily: "verdana",
+                        }}
+                      >
+                        {item.name}
+                      </Typography>
+                    }
+                    secondary={
+                      <Typography
+                        variant="body2"
+                        sx={{
+                          fontSize: 15,
+                          fontFamily: "verdana",
+                          fontWeight: 600,
+                          opacity: 0.8,
+                        }}
+                      >
+                        {item.category_name.charAt(0).toUpperCase() +
+                          item.category_name.slice(1)}
+                      </Typography>
+                    }
+                  ></ListItemText>
+                </Link>
+              </Card>
             </Grid>
           ))}
         </Grid>
