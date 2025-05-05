@@ -2,11 +2,9 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemText,
   Box,
   useTheme,
   ListItemIcon,
-  Typography,
 } from "@mui/material";
 import useCrud from "../../hooks/useFetchCRUDData";
 import { useEffect } from "react";
@@ -22,6 +20,7 @@ interface Category {
 
 const Explore = () => {
   const theme = useTheme();
+  const isDarkMode = theme.palette.mode === "dark";
   const { dataCRUD, error, loading, fetchData } = useCrud<Category>(
     [],
     "/categories/"
@@ -77,6 +76,7 @@ const Explore = () => {
                         borderRadius: "8px",
                         objectFit: "cover",
                         opacity: 0.8,
+                        filter: isDarkMode ? "invert(100%)" : "none",
                       }}
                     />
                   </ListItemAvatar>

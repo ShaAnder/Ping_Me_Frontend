@@ -16,16 +16,13 @@ const PrimaryDraw = ({ children }: PrimaryDrawProps) => {
       <Drawer
         variant="permanent"
         hideBackdrop
-        slotProps={{
-          paper: {
-            sx: {
-              mt: `${theme.nav.height}px`,
-              marginLeft: `${theme.serverList.width}px`,
-              boxShadow: "none",
-              height: `calc(100vh - ${theme.nav.height})px`,
-              width: theme.primaryDraw.width,
-              border: "1px solid lightgrey",
-            },
+        PaperProps={{
+          sx: {
+            mt: `${theme.nav.height}px`,
+            marginLeft: `${theme.serverList.width}px`,
+            boxShadow: "none",
+            height: `calc(100vh - ${theme.nav.height}px)`,
+            width: theme.primaryDraw.width,
           },
         }}
       >

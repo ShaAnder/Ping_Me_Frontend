@@ -15,15 +15,12 @@ const ServerList = ({ children }: ServerListProps) => {
       <Drawer
         variant="permanent"
         hideBackdrop
-        slotProps={{
-          paper: {
-            sx: {
-              mt: `${theme.nav.height}px`,
-              boxShadow: "none",
-              height: `calc(100vh - ${theme.nav.height})px`,
-              width: theme.serverList.width,
-              border: "1px solid lightgrey",
-            },
+        PaperProps={{
+          sx: {
+            mt: `${theme.nav.height}px`,
+            boxShadow: "none",
+            height: `calc(100vh - ${theme.nav.height}px)`,
+            width: theme.serverList.width,
           },
         }}
       >

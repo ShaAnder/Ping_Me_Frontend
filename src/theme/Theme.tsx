@@ -32,7 +32,6 @@ export const createMuiTheme = (mode: "light" | "dark") => {
       body1: { fontWeight: 500, letterSpacing: "-0.5px" },
       body2: { fontWeight: 500, fontSize: "15px", letterSpacing: "-0.5px" },
     },
-
     nav: {
       height: 50,
     },
@@ -42,7 +41,6 @@ export const createMuiTheme = (mode: "light" | "dark") => {
     primaryDraw: {
       width: 240,
     },
-
     palette: {
       mode,
     },

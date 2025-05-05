@@ -1,19 +1,24 @@
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import { CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
-import React, { useState, useMemo } from "react";
 import createMuiTheme from "../theme/Theme";
 import { ColorModeContext } from "./DarkModeContext";
-import DarkModeContext from "../contexts/DarkModeContext";
 
 interface ToggleColorModeProps {
   children: React.ReactNode;
 }
 
 const ToggleColorMode: React.FC<ToggleColorModeProps> = ({ children }) => {
-  const [mode, setMode] =
-    useState<"light" | "dark">(
-      () => localStorage.getItem("colorMode") as "light" | "dark"
-    ) || (useMediaQuery("([prefers-color-scheme: dark") ? "dark" : "light");
-  const toggleColorMode = React.useCallback(() => {
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const [mode, setMode] = useState<"light" | "dark">(() => {
+    const storedMode = localStorage.getItem("colorMode");
+    if (storedMode === "light" || storedMode === "dark") {
+      return storedMode;
+    }
+    return prefersDarkMode ? "dark" : "light";
+  });
+
+  const toggleColorMode = useCallback(() => {
     setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
   }, []);
 
@@ -22,8 +27,7 @@ const ToggleColorMode: React.FC<ToggleColorModeProps> = ({ children }) => {
   }, [mode]);
 
   const colorMode = useMemo(() => ({ toggleColorMode }), [toggleColorMode]);
-
-  const theme = React.useMemo(() => createMuiTheme(mode), [mode]);
+  const theme = useMemo(() => createMuiTheme(mode), [mode]);
 
   return (
     <ColorModeContext.Provider value={colorMode}>

@@ -93,14 +93,14 @@ const ExplorePopularServers = () => {
                   to={`/server/${item.id}`}
                   style={{ textDecoration: "none", color: "inherit" }}
                 >
-                  <Box sx={{ position: "relative", width: "300px", mt: 3 }}>
+                  <Box sx={{ position: "relative", width: "300px", mt: 5 }}>
                     <CardMedia
                       component="img"
                       image={item.server_image_urls.banner_image_url}
                       alt="server banner image"
                       sx={{
                         display: { xs: "none", sm: "block" },
-                        width: "98%",
+                        width: "95%",
                         borderRadius: 2,
                         border: "2px solid gray",
                       }}
@@ -146,8 +146,9 @@ const ExplorePopularServers = () => {
                         sx={{
                           fontSize: 15,
                           fontFamily: "verdana",
-                          fontWeight: 600,
-                          opacity: 0.8,
+                          fontWeight: 500,
+                          opacity: 1,
+                          letterSpacing: 1,
                         }}
                       >
                         {item.category_name.charAt(0).toUpperCase() +

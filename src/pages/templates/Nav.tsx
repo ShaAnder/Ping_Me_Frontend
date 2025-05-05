@@ -1,5 +1,6 @@
 import { Box, AppBar, Toolbar } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import AccountButton from "../../components/nav/AccountButton";
 
 const Nav = () => {
   const theme = useTheme();
@@ -9,6 +10,7 @@ const Nav = () => {
       sx={{
         backgroundColor: theme.palette.background.default,
         borderBottom: `1px solid ${theme.palette.divider}`,
+        zIndex: (theme) => theme.zIndex.drawer + 1,
       }}
     >
       <Toolbar
@@ -39,6 +41,7 @@ const Nav = () => {
 
         {/* Right-side actions */}
         <Box sx={{ display: "flex", gap: 1 }}></Box>
+        <AccountButton />
       </Toolbar>
     </AppBar>
   );

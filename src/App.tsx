@@ -7,8 +7,7 @@ import {
 
 import Home from "./pages/Home";
 import Popular from "./pages/Popular";
-import { ThemeProvider } from "@mui/material/styles";
-import { createMuiTheme } from "./theme/Theme";
+import ToggleColorMode from "./contexts/ToggleColorMode";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -20,12 +19,11 @@ const router = createBrowserRouter(
 );
 
 const App: React.FC = () => {
-  const theme = createMuiTheme();
   return (
     <>
-      <ThemeProvider theme={theme}>
+      <ToggleColorMode>
         <RouterProvider router={router} />
-      </ThemeProvider>
+      </ToggleColorMode>
     </>
   );
 };
