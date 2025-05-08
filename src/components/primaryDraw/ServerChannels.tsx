@@ -18,7 +18,7 @@ interface Category {
   category_icon_url: string;
 }
 
-const Explore = () => {
+const ServerChannel = () => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
   const { dataCRUD, fetchData } = useCrud<Category>([], "/categories/");
@@ -45,7 +45,7 @@ const Explore = () => {
           mb: 1,
         }}
       >
-        Explore
+        Server Name
       </Box>
       <List sx={{ py: 0 }}>
         {dataCRUD.map((item) => (
@@ -56,7 +56,7 @@ const Explore = () => {
             dense={true}
           >
             <Link
-              to={`/explore/${item.name}`}
+              to={`/ServerChannel/${item.name}`}
               style={{ textDecoration: "none", color: "inherit" }}
             >
               <ListItemButton sx={{ minHeight: 48, fontFamily: "verdana" }}>
@@ -88,4 +88,4 @@ const Explore = () => {
   );
 };
 
-export default Explore;
+export default ServerChannel;

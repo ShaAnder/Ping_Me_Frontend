@@ -1,61 +1,56 @@
-import useWebSocket from "react-use-websocket";
-import { SOCKET_URL } from "../api/config";
-import { useState } from "react";
+import { Box } from "@mui/material";
+
+import Nav from "./templates/Nav";
+import ServerList from "./templates/ServerList";
+import PrimaryDraw from "./templates/PrimaryDraw";
+import Main from "./templates/Main";
+import UserServer from "../components/serverList/UserServers";
+import MessageInterface from "../components/main/MessageInterface";
+import ServerChannel from "../components/primaryDraw/ServerChannels";
+import { ServerInterface } from "../@types/server.d";
+import useCrud from "../hooks/useFetchCRUDData";
+import { useEffect } from "react";
+
+import { useParams, useNavigate } from "react-router-dom";
 
 const Server = () => {
-  const [newMessage, setNewMessage] = useState<string[]>([]);
-  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+  const { serverId } = useParams();
 
-  const { sendJsonMessage } = useWebSocket(SOCKET_URL, {
-    onOpen: () => console.log("✅ WebSocket connected"),
-    onClose: () => console.log("❌ WebSocket disconnected"),
-    onError: () => console.log("⚠️ WebSocket error"),
-    onMessage: (msg) => {
-      try {
-        const data = JSON.parse(msg.data);
-        console.log("📨 Received:", data);
+  const { error, fetchData } = useCrud<ServerInterface>(
+    [],
+    `/server_list/select/?by_serverid=${serverId}`
+  );
 
-        if (data?.message) {
-          setNewMessage((prev) => [...prev, data.message]);
-        }
-      } catch (err) {
-        console.error("Failed to parse WS message:", err);
-      }
-    },
-    shouldReconnect: () => true,
-  });
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  const handleSend = () => {
-    console.log("Sending:", message);
-    if (message.trim() !== "") {
-      sendJsonMessage({ message });
-      setMessage("");
-    }
-  };
+  if (error !== null && error.message === "400") {
+    navigate("/");
+    // can also use this to open a modal for user confirmation
+    return null;
+  }
 
   return (
-    <div>
-      <div>
-        {newMessage.map((msg, index) => (
-          <div key={index}>
-            <p>{msg}</p>
-          </div>
-        ))}
-      </div>
+    <>
+      <Nav />
+      <Box sx={{ display: "flex", width: "100%" }}>
+        {/* Sidebar - Server List */}
+        <ServerList>
+          <UserServer />
+        </ServerList>
+        {/* Explore Section - Primary Drawer */}
+        <PrimaryDraw>
+          <ServerChannel />
+        </PrimaryDraw>
 
-      <label>
-        Enter Message:
-        <input
-          type="text"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
-      </label>
-
-      <button type="button" onClick={handleSend}>
-        Send Message
-      </button>
-    </div>
+        {/* Drawer - Popular Servers */}
+        <Main>
+          <MessageInterface />
+        </Main>
+      </Box>
+    </>
   );
 };
 
