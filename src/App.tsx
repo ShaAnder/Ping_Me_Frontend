@@ -8,11 +8,13 @@ import {
 import Home from "./pages/Home";
 import Popular from "./pages/Popular";
 import ToggleColorMode from "./contexts/ToggleColorMode";
+import Server from "./pages/Server";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
       <Route path="/" element={<Home />} />
+      <Route path="/server" element={<Server />} />
       <Route path="/explore/:categoryName" element={<Popular />} />
     </Route>
   )

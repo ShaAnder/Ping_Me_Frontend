@@ -7,7 +7,7 @@ import Main from "./templates/Main";
 
 import UserServer from "../components/serverList/UserServers";
 import Explore from "../components/primaryDraw/Explore";
-import ExplorePopularServers from "../components/main/popularServers";
+import ExplorePopularServers from "../components/main/PopularServers";
 
 const Popular = () => {
   return (
