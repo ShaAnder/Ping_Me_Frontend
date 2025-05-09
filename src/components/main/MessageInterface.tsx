@@ -1,12 +1,29 @@
 import useWebSocket from "react-use-websocket";
-import { SOCKET_URL } from "../../api/config";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
+import useCrud from "../../hooks/useFetchCRUDData";
+import { ServerInterface } from "../../@types/server.d";
+
+interface Message {
+  sender: string;
+  content: string;
+  timestamp: string;
+}
 
 const MessageInterface = () => {
-  const [newMessage, setNewMessage] = useState<string[]>([]);
+  const [newMessage, setNewMessage] = useState<Message[]>([]);
   const [message, setMessage] = useState("");
+  const { serverId, channelId } = useParams();
+  const { fetchData } = useCrud<ServerInterface>(
+    [],
+    `/messages/?channel_id=${channelId}`
+  );
 
-  const { sendJsonMessage } = useWebSocket(SOCKET_URL, {
+  const socketURL = channelId
+    ? `wss://ping-me-pp5-backend-6aaeef173b97.herokuapp.com/${serverId}/${channelId}`
+    : null;
+
+  const { sendJsonMessage } = useWebSocket(socketURL, {
     onOpen: () => console.log("✅ WebSocket connected"),
     onClose: () => console.log("❌ WebSocket disconnected"),
     onError: () => console.log("⚠️ WebSocket error"),
@@ -33,12 +50,19 @@ const MessageInterface = () => {
     }
   };
 
+  // Clear out old messages when we join a new channel
+  useEffect(() => {
+    setNewMessage([]);
+  }, [channelId]);
+
   return (
     <div>
       <div>
-        {newMessage.map((msg, index) => (
+        {newMessage.map((msg: Message, index: number) => (
           <div key={index}>
-            <p>{msg}</p>
+            <p>{msg.sender}</p>
+            <p>{msg.timestamp}</p>
+            <p>{msg.content}</p>
           </div>
         ))}
       </div>

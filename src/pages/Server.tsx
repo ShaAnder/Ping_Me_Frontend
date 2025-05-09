@@ -11,24 +11,44 @@ import { ServerInterface } from "../@types/server.d";
 import useCrud from "../hooks/useFetchCRUDData";
 import { useEffect } from "react";
 
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, data } from "react-router-dom";
 
 const Server = () => {
   const navigate = useNavigate();
-  const { serverId } = useParams();
+  const { serverId, channelId } = useParams();
 
-  const { error, fetchData } = useCrud<ServerInterface>(
+  const { dataCRUD, error, loading, fetchData } = useCrud<ServerInterface>(
     [],
     `/server_list/select/?by_serverid=${serverId}`
   );
+
+  console.log(dataCRUD);
+
+  // Check if the channelId is valid by searching for it in the data fetched from the API
+  const isChannel = (): boolean => {
+    if (!channelId) {
+      return true;
+    }
+
+    return dataCRUD.some((server) =>
+      server.channel_server.some(
+        (channel) => channel.id === parseInt(channelId)
+      )
+    );
+  };
 
   useEffect(() => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (!isChannel()) {
+      navigate(`/server/${serverId}`);
+    }
+  }, [isChannel, channelId]);
+
   if (error !== null && error.message === "400") {
     navigate("/");
-    // can also use this to open a modal for user confirmation
     return null;
   }
 
@@ -42,7 +62,7 @@ const Server = () => {
         </ServerList>
         {/* Explore Section - Primary Drawer */}
         <PrimaryDraw>
-          <ServerChannel />
+          <ServerChannel data={dataCRUD} />
         </PrimaryDraw>
 
         {/* Drawer - Popular Servers */}

@@ -1,31 +1,17 @@
-import {
-  List,
-  ListItem,
-  ListItemButton,
-  Box,
-  useTheme,
-  ListItemIcon,
-} from "@mui/material";
-import useCrud from "../../hooks/useFetchCRUDData";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
+import { List, ListItem, ListItemButton, Box, useTheme } from "@mui/material";
+import { Link, useParams } from "react-router-dom";
+import { ServerInterface } from "../../@types/server";
 
-interface Category {
-  id: number;
-  name: string;
-  description: string;
-  category_icon_url: string;
+interface ServerChannelProps {
+  data: ServerInterface[];
 }
 
-const ServerChannel = () => {
+const ServerChannel = (props: ServerChannelProps) => {
+  const { data } = props;
   const theme = useTheme();
-  const isDarkMode = theme.palette.mode === "dark";
-  const { dataCRUD, fetchData } = useCrud<Category>([], "/categories/");
+  const { serverId } = useParams();
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  console.log(data);
 
   return (
     <>
@@ -34,7 +20,8 @@ const ServerChannel = () => {
           height: "50px",
           display: "flex",
           alignItems: "center",
-          px: 4,
+          justifyContent: "center", // Centers content horizontally
+          p: 1,
           fontSize: 16,
           letterSpacing: 1,
           fontFamily: "verdana",
@@ -43,46 +30,40 @@ const ServerChannel = () => {
           top: 0,
           backgroundColor: theme.palette.background.default,
           mb: 1,
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          textAlign: "center", // Ensures text inside is centered
         }}
       >
-        Server Name
+        {data[0]?.name.length > 20
+          ? `${data[0]?.name.slice(0, 20)}...`
+          : data[0]?.name}
       </Box>
       <List sx={{ py: 0 }}>
-        {dataCRUD.map((item) => (
-          <ListItem
-            disablePadding
-            key={item.id}
-            sx={{ display: "block" }}
-            dense={true}
-          >
-            <Link
-              to={`/ServerChannel/${item.name}`}
-              style={{ textDecoration: "none", color: "inherit" }}
+        {data.flatMap((obj) =>
+          obj.channel_server.map((item) => (
+            <ListItem
+              disablePadding
+              key={item.id}
+              sx={{ display: "block" }}
+              dense={true}
             >
-              <ListItemButton sx={{ minHeight: 48, fontFamily: "verdana" }}>
-                <ListItemIcon sx={{ justifyContent: "center" }}>
-                  <ListItemAvatar
-                    sx={{ minWidth: 0, alignItems: "center", display: "flex" }}
-                  >
-                    <img
-                      alt="category icon"
-                      src={item.category_icon_url}
-                      style={{
-                        width: 25,
-                        height: 25,
-                        borderRadius: "8px",
-                        objectFit: "cover",
-                        opacity: 0.8,
-                        filter: isDarkMode ? "invert(100%)" : "none",
-                      }}
-                    />
-                  </ListItemAvatar>
-                </ListItemIcon>
-                {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
-              </ListItemButton>
-            </Link>
-          </ListItem>
-        ))}
+              <Link
+                to={`/server/${serverId}/${item.id}`}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <ListItemButton sx={{ minHeight: 48, fontFamily: "verdana" }}>
+                  {item.type === "text" ? (
+                    <>#️ {item.name}</>
+                  ) : (
+                    <>🔊 {item.name}</>
+                  )}
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          ))
+        )}
       </List>
     </>
   );

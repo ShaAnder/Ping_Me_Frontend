@@ -4,6 +4,7 @@ export interface ServerInterface {
   server: string;
   description: string;
   category: string;
+  category_name: string;
   server_image_urls: {
     server_icon_url: string;
     banner_image_url: string;
@@ -14,5 +15,6 @@ export interface ServerInterface {
     server: number;
     topic: string;
     owner: number;
+    type: string;
   }[];
 }
