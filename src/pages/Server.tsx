@@ -67,7 +67,7 @@ const Server = () => {
 
         {/* Drawer - Popular Servers */}
         <Main>
-          <MessageInterface />
+          <MessageInterface data={dataCRUD} />
         </Main>
       </Box>
     </>
