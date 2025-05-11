@@ -32,7 +32,8 @@ interface ServerChannelProps {
 interface Message {
   sender: string;
   content: string;
-  timestamp: string;
+  timestamp_created: string;
+  timestamp_updated: string;
 }
 
 const MessageInterface = (props: ServerChannelProps) => {
@@ -98,6 +99,20 @@ const MessageInterface = (props: ServerChannelProps) => {
     } as SendMessageData);
   };
 
+  const formatTimeStamp = (timestamp: string) => {
+    const date = new Date(Date.parse(timestamp));
+
+    const formattedDate = `${date.getDate()}/${
+      date.getMonth() + 1
+    }/${date.getFullYear()}`;
+    const formattedTime = date.toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+    return [formattedTime, formattedDate];
+  };
+
   return (
     <>
       <MessageInterfaceChannels data={data} />
@@ -143,14 +158,31 @@ const MessageInterface = (props: ServerChannelProps) => {
                           variant: "body2",
                         }}
                         primary={
-                          <Typography
-                            component="span"
-                            variant="body1"
-                            color="text.primary"
-                            sx={{ display: "inline", fontWeight: "600" }}
-                          >
-                            {msg.sender}
-                          </Typography>
+                          <>
+                            <Typography
+                              component="span"
+                              variant="body1"
+                              color="text.primary"
+                              sx={{ display: "inline", fontWeight: "600" }}
+                            >
+                              {msg.sender}
+                            </Typography>
+                            <Typography
+                              component="span"
+                              variant="caption"
+                              color="textSecondary"
+                              sx={{
+                                paddingLeft: 3,
+                                fontSize: 10,
+                              }}
+                            >
+                              {`${
+                                formatTimeStamp(msg?.timestamp_created)[0]
+                              }   |   ${
+                                formatTimeStamp(msg?.timestamp_created)[1]
+                              }`}
+                            </Typography>
+                          </>
                         }
                         secondary={
                           <Box>
