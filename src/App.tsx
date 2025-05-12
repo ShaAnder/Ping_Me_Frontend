@@ -9,6 +9,9 @@ import Home from "./pages/Home";
 import Popular from "./pages/Popular";
 import ToggleColorMode from "./contexts/ToggleColorMode";
 import Server from "./pages/Server";
+import Login from "./pages/Login";
+import Signup from "./pages/Login";
+import { AuthServiceProvider } from "./contexts/UserAuthContext";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -16,6 +19,8 @@ const router = createBrowserRouter(
       <Route path="/" element={<Home />} />
       <Route path="/server/:serverId/:channelId?" element={<Server />} />
       <Route path="/explore/:categoryName" element={<Popular />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
     </Route>
   )
 );
@@ -23,9 +28,11 @@ const router = createBrowserRouter(
 const App: React.FC = () => {
   return (
     <>
-      <ToggleColorMode>
-        <RouterProvider router={router} />
-      </ToggleColorMode>
+      <AuthServiceProvider>
+        <ToggleColorMode>
+          <RouterProvider router={router} />
+        </ToggleColorMode>
+      </AuthServiceProvider>
     </>
   );
 };
