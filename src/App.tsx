@@ -13,6 +13,9 @@ import Login from "./pages/Login";
 import Signup from "./pages/Login";
 import { AuthServiceProvider } from "./contexts/UserAuthContext";
 
+import TestLogin from "./pages/TestLogin";
+import ProtectedRoute from "./services/ProtectedRoute";
+
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route>
@@ -20,6 +23,14 @@ const router = createBrowserRouter(
       <Route path="/server/:serverId/:channelId?" element={<Server />} />
       <Route path="/explore/:categoryName" element={<Popular />} />
       <Route path="/login" element={<Login />} />
+      <Route
+        path="/testlogin"
+        element={
+          <ProtectedRoute>
+            <TestLogin />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/signup" element={<Signup />} />
     </Route>
   )

@@ -14,7 +14,7 @@ const Login = () => {
       const { username, password } = values;
       try {
         await login(username, password);
-        navigate("/");
+        navigate("/testlogin");
       } catch (err) {
         console.error("Login failed:", err);
         // Add UI error feedback here
