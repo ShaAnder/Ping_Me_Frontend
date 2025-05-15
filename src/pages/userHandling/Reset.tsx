@@ -49,17 +49,29 @@ const ResetPassword: React.FC = () => {
     { setSubmitting, setErrors }: any
   ) => {
     try {
-      await axios.post(`${BASE_URL}/api/account/password_reset_confirm/`, {
-        uid,
-        token,
-        new_password1: values.new_password1,
-        new_password2: values.new_password2,
-      });
+      const response = await axios.post(
+        `${BASE_URL}/api/account/password_reset_confirm/`,
+        {
+          uid,
+          token,
+          new_password1: values.new_password1,
+          new_password2: values.new_password2,
+        }
+      );
+
       setModalOpen(true);
+
+      // Use redirect_url from backend if provided, else fallback to /login
+      const redirectUrl = response.data.redirect_url || "/login";
       setTimeout(() => {
         setModalOpen(false);
-        navigate("/login");
-      }, 5000);
+        // If the redirectUrl is an absolute URL, use window.location.href
+        if (redirectUrl.startsWith("http")) {
+          window.location.href = redirectUrl;
+        } else {
+          navigate(redirectUrl);
+        }
+      }, 2500); // 2.5 seconds delay before redirect
     } catch (err: any) {
       if (err.response?.data) {
         setErrors(err.response.data);
