@@ -1,6 +1,6 @@
 import { Grid, Box, Typography, Link, useTheme } from "@mui/material";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import AuthHeader from "../components/userManagement/authHeader";
+import AuthHeader from "../components/userManagement/AuthHeader";
 import UserForm from "../components/userManagement/UserForm";
 import { useUserAuth } from "../hooks/useUserAuth";
 
