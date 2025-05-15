@@ -8,6 +8,7 @@ import Main from "./templates/Main";
 import UserServer from "../components/serverList/UserServers";
 import Explore from "../components/primaryDraw/Explore";
 import ExplorePopularServers from "../components/main/PopularServers";
+import UserPanel from "../components/shared/UserPanel";
 
 const Popular = () => {
   return (
@@ -27,6 +28,7 @@ const Popular = () => {
         <Main>
           <ExplorePopularServers />
         </Main>
+        <UserPanel />
       </Box>
     </>
   );

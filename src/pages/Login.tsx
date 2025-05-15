@@ -1,49 +1,62 @@
 import { useFormik } from "formik";
-import { useNavigate } from "react-router-dom";
-import { useAuthServiceContext } from "../contexts/UserAuthContext";
+import { Navigate, useNavigate } from "react-router-dom";
+import { useUserAuth } from "../hooks/useUserAuth";
 
-const Login = () => {
-  const { login } = useAuthServiceContext();
+const Login: React.FC = () => {
+  const { login, isAuthenticated, loading } = useUserAuth();
   const navigate = useNavigate();
+
   const formik = useFormik({
-    initialValues: {
-      username: "",
-      password: "",
-    },
-    onSubmit: async (values) => {
-      const { username, password } = values;
+    initialValues: { username: "", password: "" },
+    onSubmit: async (values, { setSubmitting, setErrors }) => {
       try {
-        await login(username, password);
-        navigate("/testlogin");
+        await login(values.username, values.password);
+        navigate("/");
       } catch (err) {
         console.error("Login failed:", err);
-        // Add UI error feedback here
+        setErrors({ password: "Invalid credentials" });
+      } finally {
+        setSubmitting(false);
       }
     },
   });
 
+  // Now it’s safe to conditionally return:
+  if (!loading && isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+
   return (
     <div>
       <h1>Login</h1>
-      <form onSubmit={formik.handleSubmit}>
-        <label>Username:</label>
-        <input
-          id="username"
-          name="username"
-          type="text"
-          value={formik.values.username}
-          onChange={formik.handleChange}
-        ></input>
-        <label>Password:</label>
-        <input
-          id="password"
-          name="password"
-          type="password"
-          value={formik.values.password}
-          onChange={formik.handleChange}
-        ></input>
-        <button type="submit">Login</button>
-      </form>
+      {loading && <p>Checking authentication…</p>}
+      {!loading && (
+        <form onSubmit={formik.handleSubmit}>
+          <label htmlFor="username">Username:</label>
+          <input
+            id="username"
+            name="username"
+            type="text"
+            value={formik.values.username}
+            onChange={formik.handleChange}
+          />
+          {formik.errors.username && <div>{formik.errors.username}</div>}
+
+          <label htmlFor="password">Password:</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            value={formik.values.password}
+            onChange={formik.handleChange}
+          />
+          {formik.errors.password && <div>{formik.errors.password}</div>}
+
+          <button type="submit" disabled={formik.isSubmitting}>
+            {formik.isSubmitting ? "Logging in…" : "Login"}
+          </button>
+        </form>
+      )}
     </div>
   );
 };

@@ -10,40 +10,31 @@ import Popular from "./pages/Popular";
 import ToggleColorMode from "./contexts/ToggleColorMode";
 import Server from "./pages/Server";
 import Login from "./pages/Login";
-import Signup from "./pages/Login";
-import { AuthServiceProvider } from "./contexts/UserAuthContext";
+import Signup from "./pages/Signup";
+import { UserAuthProvider } from "./services/UserAuthProvider";
 
-import TestLogin from "./pages/TestLogin";
-import ProtectedRoute from "./services/ProtectedRoute";
+// import ProtectedRoute from "./services/ProtectedRoute";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route>
+    <>
+      <Route path="/login" element={<Login />} />
+      <Route path="/signup" element={<Signup />} />
       <Route path="/" element={<Home />} />
       <Route path="/server/:serverId/:channelId?" element={<Server />} />
       <Route path="/explore/:categoryName" element={<Popular />} />
-      <Route path="/login" element={<Login />} />
-      <Route
-        path="/testlogin"
-        element={
-          <ProtectedRoute>
-            <TestLogin />
-          </ProtectedRoute>
-        }
-      />
-      <Route path="/signup" element={<Signup />} />
-    </Route>
+    </>
   )
 );
 
 const App: React.FC = () => {
   return (
     <>
-      <AuthServiceProvider>
+      <UserAuthProvider>
         <ToggleColorMode>
           <RouterProvider router={router} />
         </ToggleColorMode>
-      </AuthServiceProvider>
+      </UserAuthProvider>
     </>
   );
 };

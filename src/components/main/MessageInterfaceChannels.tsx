@@ -1,20 +1,6 @@
-import {
-  AppBar,
-  Toolbar,
-  Box,
-  ListItemAvatar,
-  Avatar,
-  Typography,
-  IconButton,
-  Drawer,
-  useTheme,
-  List,
-} from "@mui/material";
+import { AppBar, Toolbar, Typography, useTheme } from "@mui/material";
 import { ServerInterface } from "../../@types/server";
 import { useParams } from "react-router-dom";
-import ServerChannel from "../primaryDraw/ServerChannels";
-import { useState } from "react";
-import MoreVertIcon from "@mui/icons-material/MoreVertIcon";
 
 interface ServerChannelProps {
   data: ServerInterface[];

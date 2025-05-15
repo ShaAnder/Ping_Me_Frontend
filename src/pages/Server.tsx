@@ -12,6 +12,7 @@ import useCrud from "../hooks/useFetchCRUDData";
 import { useEffect } from "react";
 
 import { useParams, useNavigate } from "react-router-dom";
+import UserPanel from "../components/shared/UserPanel";
 
 const Server = () => {
   const navigate = useNavigate();
@@ -67,6 +68,7 @@ const Server = () => {
         <Main>
           <MessageInterface data={dataCRUD} />
         </Main>
+        <UserPanel />
       </Box>
     </>
   );

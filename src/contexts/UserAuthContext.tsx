@@ -1,26 +1,15 @@
-import React, { createContext, useContext } from "react";
-import { AuthServiceProps } from "../@types/auth-service.d";
-import { useAuthService } from "../services/AuthServices";
+import { createContext } from "react";
+import { UserInterface } from "../@types/user";
 
-const AuthServiceContext = createContext<AuthServiceProps | null>(null);
-
-export function AuthServiceProvider(props: React.PropsWithChildren) {
-  const authServices = useAuthService();
-  return (
-    <AuthServiceContext.Provider value={authServices}>
-      {props.children}
-    </AuthServiceContext.Provider>
-  );
+export interface UserAuthContextType {
+  user: UserInterface | null;
+  isAuthenticated: boolean;
+  loading: boolean;
+  login: (username: string, password: string) => Promise<void>;
+  logout: () => void;
+  refreshUser: () => Promise<void>;
 }
 
-export function useAuthServiceContext(): AuthServiceProps {
-  const context = useContext(AuthServiceContext);
-
-  if (context === null) {
-    throw new Error("Error - Must use AuthServiceProvider");
-  }
-
-  return context;
-}
-
-export default AuthServiceProvider;
+export const UserAuthContext = createContext<UserAuthContextType | undefined>(
+  undefined
+);
