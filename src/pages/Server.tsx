@@ -18,7 +18,7 @@ const Server = () => {
   const navigate = useNavigate();
   const { serverId, channelId } = useParams();
 
-  const { dataCRUD, error, loading, fetchData } = useCrud<ServerInterface>(
+  const { dataCRUD, error, fetchData } = useCrud<ServerInterface>(
     [],
     `api/server_list/select/?by_serverid=${serverId}`
   );

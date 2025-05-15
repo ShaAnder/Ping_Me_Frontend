@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Grid, Box, Typography, Link, useTheme } from "@mui/material";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import AuthHeader from "../components/userManagement/AuthHeader";
+import AuthHeader from "../components/userManagement/Header";
 import UserForm from "../components/userManagement/UserForm";
 import { useUserAuth } from "../hooks/useUserAuth";
 
@@ -38,6 +39,7 @@ const Login: React.FC = () => {
       await login(values.username, values.password);
       navigate("/");
     } catch (err: any) {
+      console.log(err);
       setErrors({
         password: "Invalid credentials, please try again.",
       });
