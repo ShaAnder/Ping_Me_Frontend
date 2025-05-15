@@ -1,63 +1,118 @@
-import { useFormik } from "formik";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Grid, Box, Typography, Link, useTheme } from "@mui/material";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
+import AuthHeader from "../components/userManagement/authHeader";
+import UserForm from "../components/userManagement/UserForm";
 import { useUserAuth } from "../hooks/useUserAuth";
 
 const Login: React.FC = () => {
-  const { login, isAuthenticated, loading } = useUserAuth();
+  const theme = useTheme();
   const navigate = useNavigate();
+  const { login, loading } = useUserAuth();
 
-  const formik = useFormik({
-    initialValues: { username: "", password: "" },
-    onSubmit: async (values, { setSubmitting, setErrors }) => {
-      try {
-        await login(values.username, values.password);
-        navigate("/");
-      } catch (err) {
-        console.error("Login failed:", err);
-        setErrors({ password: "Invalid credentials" });
-      } finally {
-        setSubmitting(false);
-      }
-    },
-  });
+  // Fields for the form
+  const fields = [
+    { name: "username", label: "Username", type: "text" },
+    { name: "password", label: "Password", type: "password" },
+  ];
 
-  // Now it’s safe to conditionally return:
-  if (!loading && isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
+  // Initial values
+  const initialValues = {
+    username: "",
+    password: "",
+  };
+
+  // Validation
+  const validate = (values: typeof initialValues) => {
+    const errors: Record<string, string> = {};
+    if (!values.username) errors.username = "Username is required";
+    if (!values.password) errors.password = "Password is required";
+    return errors;
+  };
+
+  // On submit
+  const onSubmit = async (
+    values: typeof initialValues,
+    { setSubmitting, setErrors }: any
+  ) => {
+    try {
+      await login(values.username, values.password);
+      navigate("/");
+    } catch (err: any) {
+      setErrors({
+        password: "Invalid credentials, please try again.",
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // Footer: Don't have an account? Sign up
+  const footer = (
+    <Typography variant="body2" sx={{ mt: 2 }}>
+      Don&apos;t have an account?
+      <Link
+        component={RouterLink}
+        to="/signup"
+        sx={{
+          fontWeight: 600,
+          ml: 1,
+          textDecoration: "none",
+          color: "primary.main",
+          cursor: "pointer",
+          "&:hover": {
+            textDecoration: "underline",
+            color: "primary.dark",
+          },
+        }}
+      >
+        Sign up
+      </Link>
+    </Typography>
+  );
 
   return (
-    <div>
-      <h1>Login</h1>
-      {loading && <p>Checking authentication…</p>}
-      {!loading && (
-        <form onSubmit={formik.handleSubmit}>
-          <label htmlFor="username">Username:</label>
-          <input
-            id="username"
-            name="username"
-            type="text"
-            value={formik.values.username}
-            onChange={formik.handleChange}
+    <Grid container sx={{ height: "100vh" }}>
+      {/* Left: Form (33%) */}
+      <Grid
+        item
+        xs={12}
+        md={4}
+        sx={{
+          minWidth: 340,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          boxShadow: { md: 3, xs: 0 },
+          bgcolor: theme.palette.background.paper,
+        }}
+      >
+        <Box sx={{ width: "80%", maxWidth: 350 }}>
+          <AuthHeader title="Login" />
+          <UserForm
+            fields={fields}
+            initialValues={initialValues}
+            validate={validate}
+            onSubmit={onSubmit}
+            submitLabel="Login"
+            loading={loading}
+            footer={footer}
           />
-          {formik.errors.username && <div>{formik.errors.username}</div>}
-
-          <label htmlFor="password">Password:</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-          />
-          {formik.errors.password && <div>{formik.errors.password}</div>}
-
-          <button type="submit" disabled={formik.isSubmitting}>
-            {formik.isSubmitting ? "Logging in…" : "Login"}
-          </button>
-        </form>
-      )}
-    </div>
+        </Box>
+      </Grid>
+      {/* Right: Image (67%) */}
+      <Grid
+        item
+        xs={false}
+        md={8}
+        sx={{
+          display: { xs: "none", md: "block" },
+          height: "100vh",
+          background: `url('/images/chatting_people.jpg') no-repeat center center/cover`,
+        }}
+      />
+    </Grid>
   );
 };
 

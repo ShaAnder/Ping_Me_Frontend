@@ -7,18 +7,25 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useTheme } from "@mui/material/styles";
-import UserCard from "./UserCard"; // import your UserCard component
+import UserCard from "./UserCard";
+import { useNavigate } from "react-router-dom";
 
 const UserPanel: React.FC = () => {
   const theme = useTheme();
   const { user, logout } = useUserAuth();
   const [cardOpen, setCardOpen] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   if (!user) return null;
 
   // Panel width calculation as before
   const panelWidth = `calc(${theme.serverList.width}px + ${theme.primaryDraw.width}px - 1px)`;
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login", { replace: true });
+  };
 
   return (
     <>
@@ -53,7 +60,7 @@ const UserPanel: React.FC = () => {
             {user.username}
           </Typography>
         </Box>
-        <IconButton onClick={logout} size="small" sx={{ p: 0 }}>
+        <IconButton onClick={handleLogout} size="small" sx={{ p: 0 }}>
           <LogoutIcon />
         </IconButton>
       </Box>
