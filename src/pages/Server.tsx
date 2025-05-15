@@ -11,7 +11,7 @@ import { ServerInterface } from "../@types/server.d";
 import useCrud from "../hooks/useFetchCRUDData";
 import { useEffect } from "react";
 
-import { useParams, useNavigate, data } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 const Server = () => {
   const navigate = useNavigate();
@@ -19,10 +19,8 @@ const Server = () => {
 
   const { dataCRUD, error, loading, fetchData } = useCrud<ServerInterface>(
     [],
-    `/server_list/select/?by_serverid=${serverId}`
+    `api/server_list/select/?by_serverid=${serverId}`
   );
-
-  console.log(dataCRUD);
 
   // Check if the channelId is valid by searching for it in the data fetched from the API
   const isChannel = (): boolean => {

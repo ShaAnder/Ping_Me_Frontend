@@ -1,38 +1,36 @@
 import { useState } from "react";
-import useJWTAxiosInterceptor from "../api/jwtinterceptor";
-import { BASE_URL } from "../api/config";
+import jwtAxios from "../api/jwtinterceptor";
 
-interface IuseCrud<T> {
+interface UseCrudResult<T> {
   dataCRUD: T[];
-  fetchData: () => Promise<void>;
+  fetchData: (params?: Record<string, unknown>) => Promise<T[]>;
   error: Error | null;
   loading: boolean;
 }
 
-const useCrud = <T>(initialData: T[], apiURL: string): IuseCrud<T> => {
-  const jwt = useJWTAxiosInterceptor();
+const useCrud = <T>(initialData: T[], apiURL: string): UseCrudResult<T> => {
   const [dataCRUD, setDataCRUD] = useState<T[]>(initialData);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const fetchData = async () => {
+  const fetchData = async (params?: Record<string, unknown>) => {
     setLoading(true);
     try {
-      const response = await jwt.get(`${BASE_URL}/api${apiURL}`);
-      const data = response?.data ?? [];
-      setDataCRUD(data);
+      const response = await jwtAxios.get<T[]>(apiURL, { params });
+      setDataCRUD(response.data ?? []);
       setError(null);
-      return data;
-    } catch (error: unknown) {
-      console.error("Fetch error:", error);
-      setError(error instanceof Error ? error : new Error("Unknown error"));
-      setDataCRUD([]); // fallback
-      return []; // avoid unhandled promise rejection
+      return response.data ?? [];
+    } catch (err: unknown) {
+      console.error("Fetch error:", err);
+      setError(err instanceof Error ? err : new Error("Unknown error"));
+      setDataCRUD([]);
+      return [];
     } finally {
       setLoading(false);
     }
   };
-  return { fetchData, loading, error, dataCRUD };
+
+  return { dataCRUD, fetchData, error, loading };
 };
 
 export default useCrud;

@@ -43,9 +43,9 @@ const MessageInterface = (props: ServerChannelProps) => {
   const [message, setMessage] = useState("");
   const server_name = data[0]?.name ?? "Server";
   const { serverId, channelId } = useParams();
-  const { fetchData } = useCrud<ServerInterface>(
+  const { fetchData } = useCrud<Message>(
     [],
-    `/messages/?channel_id=${channelId}`
+    `api/messages/?channel_id=${channelId}`
   );
 
   const socketURL = channelId

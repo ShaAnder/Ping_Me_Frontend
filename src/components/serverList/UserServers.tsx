@@ -25,7 +25,10 @@ import home from "../../assets/img/home.png";
 import plus from "../../assets/img/plus.png";
 
 const UserServer: React.FC = () => {
-  const { dataCRUD, fetchData } = useCrud<Server>([], "/server_list/select/");
+  const { dataCRUD, fetchData } = useCrud<Server>(
+    [],
+    "api/server_list/select/"
+  );
 
   useEffect(() => {
     fetchData();

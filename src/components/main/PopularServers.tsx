@@ -21,8 +21,8 @@ interface PopularServer {
 const ExplorePopularServers = () => {
   const { categoryName } = useParams();
   const url = categoryName
-    ? `/server_list/select/?category=${categoryName}`
-    : "/server_list/select/";
+    ? `api/server_list/select/?category=${categoryName}`
+    : "api/server_list/select/";
   const { dataCRUD, fetchData } = useCrud<PopularServer>([], url);
 
   useEffect(() => {

@@ -1,5 +1,6 @@
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
+import jwtAxios from "../api/jwtinterceptor";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -8,7 +9,14 @@ const Signup = () => {
       username: "",
       password: "",
     },
-    onSubmit: () => {},
+    onSubmit: async (values) => {
+      try {
+        await jwtAxios.post("/api/register/", values); // Adjust endpoint as needed
+        navigate("/login");
+      } catch (err) {
+        console.error("Signup failed:", err);
+      }
+    },
   });
 
   return (
@@ -22,7 +30,7 @@ const Signup = () => {
           type="text"
           value={formik.values.username}
           onChange={formik.handleChange}
-        ></input>
+        />
         <label>Password:</label>
         <input
           id="password"
@@ -30,7 +38,7 @@ const Signup = () => {
           type="password"
           value={formik.values.password}
           onChange={formik.handleChange}
-        ></input>
+        />
         <button type="submit">Signup</button>
       </form>
     </div>

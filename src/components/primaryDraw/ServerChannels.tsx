@@ -11,8 +11,6 @@ const ServerChannel = (props: ServerChannelProps) => {
   const theme = useTheme();
   const { serverId } = useParams();
 
-  console.log(data);
-
   return (
     <>
       <Box
