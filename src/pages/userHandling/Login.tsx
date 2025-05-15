@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Grid, Box, Typography, Link, useTheme } from "@mui/material";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import AuthHeader from "../components/userManagement/Header";
-import UserForm from "../components/userManagement/UserForm";
-import { useUserAuth } from "../hooks/useUserAuth";
+import AuthHeader from "../../components/userManagement/Header";
+import UserForm from "../../components/userManagement/UserForm";
+import { useUserAuth } from "../../hooks/useUserAuth";
+import loginImg from "../../assets/img/login.jpg";
 
 const Login: React.FC = () => {
   const theme = useTheme();
@@ -48,10 +49,9 @@ const Login: React.FC = () => {
     }
   };
 
-  // Footer: Don't have an account? Sign up
   const footer = (
     <Typography variant="body2" sx={{ mt: 2 }}>
-      Don&apos;t have an account?
+      Don't have an account?
       <Link
         component={RouterLink}
         to="/signup"
@@ -92,6 +92,7 @@ const Login: React.FC = () => {
       >
         <Box sx={{ width: "80%", maxWidth: 350 }}>
           <AuthHeader title="Login" />
+
           <UserForm
             fields={fields}
             initialValues={initialValues}
@@ -111,7 +112,10 @@ const Login: React.FC = () => {
         sx={{
           display: { xs: "none", md: "block" },
           height: "100vh",
-          background: `url('/images/chatting_people.jpg') no-repeat center center/cover`,
+          backgroundImage: `url(${loginImg})`,
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center right",
+          backgroundSize: "cover",
         }}
       />
     </Grid>

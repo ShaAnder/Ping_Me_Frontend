@@ -3,10 +3,11 @@ import React, { useState } from "react";
 import { Grid, Box, Typography, Link, useTheme, Button } from "@mui/material";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import axios from "axios";
-import AuthModal from "../components/userManagement/AuthModal";
-import AuthHeader from "../components/userManagement/Header";
-import UserForm from "../components/userManagement/UserForm";
-import { BASE_URL } from "../api/config";
+import AuthModal from "../../components/userManagement/AuthModal";
+import AuthHeader from "../../components/userManagement/Header";
+import UserForm from "../../components/userManagement/UserForm";
+import { BASE_URL } from "../../api/config";
+import signUpImg from "../../assets/img/signup.jpg";
 
 const Signup: React.FC = () => {
   const theme = useTheme();
@@ -156,7 +157,10 @@ const Signup: React.FC = () => {
         sx={{
           display: { xs: "none", md: "block" },
           height: "100vh",
-          background: `url('/images/chatting_people.jpg') no-repeat center center/cover`,
+          backgroundImage: `url(${signUpImg})`,
+          backgroundRepeat: "no-repeat",
+          backgroundPosition: "center right",
+          backgroundSize: "cover",
         }}
       />
     </Grid>
