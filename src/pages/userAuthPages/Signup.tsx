@@ -3,9 +3,10 @@ import React, { useState } from "react";
 import { Grid, Box, Typography, Link, useTheme, Button } from "@mui/material";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import axios from "axios";
-import AuthModal from "../../components/userManagement/AuthModal";
-import AuthHeader from "../../components/userManagement/Header";
-import UserForm from "../../components/userManagement/UserForm";
+import AuthModal from "../../components/shared/AuthModal";
+import AuthHeader from "../../components/shared/Header";
+import Form from "../../components/shared/Form";
+import { Field } from "../../components/shared/Form";
 import { BASE_URL } from "../../api/config";
 import signUpImg from "../../assets/img/signup.jpg";
 
@@ -15,11 +16,11 @@ const Signup: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   // Form fields definition
-  const fields = [
-    { name: "username", label: "Username", type: "text" },
-    { name: "email", label: "Email", type: "email" },
-    { name: "email2", label: "Confirm Email", type: "email" },
-    { name: "password", label: "Password", type: "password" },
+  const fields: Field[] = [
+    { name: "username", label: "Username", type: "text", required: true },
+    { name: "email", label: "Email", type: "email", required: true },
+    { name: "email2", label: "Confirm Email", type: "email", required: true },
+    { name: "password", label: "Password", type: "password", required: true },
   ];
 
   // Formik initial values
@@ -109,7 +110,7 @@ const Signup: React.FC = () => {
       >
         <Box sx={{ width: "80%", maxWidth: 350 }}>
           <AuthHeader title="Sign Up" />
-          <UserForm
+          <Form
             fields={fields}
             initialValues={initialValues}
             validate={validate}

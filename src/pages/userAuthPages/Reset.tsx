@@ -3,9 +3,10 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Grid, Box, Typography, Button, useTheme } from "@mui/material";
 import axios from "axios";
-import AuthModal from "../../components/userManagement/AuthModal";
-import AuthHeader from "../../components/userManagement/Header";
-import UserForm from "../../components/userManagement/UserForm";
+import AuthModal from "../../components/shared/AuthModal";
+import AuthHeader from "../../components/shared/Header";
+import Form from "../../components/shared/Form";
+import { Field } from "../../components/shared/Form";
 import { BASE_URL } from "../../api/config";
 import resetImg from "../../assets/img/reset.jpg";
 
@@ -16,9 +17,19 @@ const ResetPassword: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   // Form fields definition
-  const fields = [
-    { name: "new_password1", label: "New Password", type: "password" },
-    { name: "new_password2", label: "Confirm New Password", type: "password" },
+  const fields: Field[] = [
+    {
+      name: "new_password1",
+      label: "New Password",
+      type: "password",
+      required: true,
+    },
+    {
+      name: "new_password2",
+      label: "Confirm New Password",
+      type: "password",
+      required: true,
+    },
   ];
 
   // Formik initial values
@@ -128,7 +139,7 @@ const ResetPassword: React.FC = () => {
       >
         <Box sx={{ width: "80%", maxWidth: 350 }}>
           <AuthHeader title="Reset Password" />
-          <UserForm
+          <Form
             fields={fields}
             initialValues={initialValues}
             validate={validate}

@@ -3,9 +3,10 @@ import React, { useState } from "react";
 import { Grid, Box, Typography, Link, useTheme, Button } from "@mui/material";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import axios from "axios";
-import AuthModal from "../../components/userManagement/AuthModal";
-import AuthHeader from "../../components/userManagement/Header";
-import UserForm from "../../components/userManagement/UserForm";
+import AuthModal from "../../components/shared/AuthModal";
+import AuthHeader from "../../components/shared/Header";
+import Form from "../../components/shared/Form";
+import { Field } from "../../components/shared/Form";
 import { BASE_URL } from "../../api/config";
 import forgotImg from "../../assets/img/forgot.jpg"; // Use a relevant image for forgot password
 
@@ -15,7 +16,9 @@ const ForgotPassword: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   // Form fields definition
-  const fields = [{ name: "email", label: "Email", type: "email" }];
+  const fields: Field[] = [
+    { name: "email", label: "Email", type: "email", required: true },
+  ];
 
   // Formik initial values
   const initialValues = {
@@ -96,7 +99,7 @@ const ForgotPassword: React.FC = () => {
       >
         <Box sx={{ width: "80%", maxWidth: 350 }}>
           <AuthHeader title="Forgot Password" />
-          <UserForm
+          <Form
             fields={fields}
             initialValues={initialValues}
             validate={validate}

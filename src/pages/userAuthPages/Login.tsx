@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Grid, Box, Typography, Link, useTheme } from "@mui/material";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import AuthHeader from "../../components/userManagement/Header";
-import UserForm from "../../components/userManagement/UserForm";
+import AuthHeader from "../../components/shared/Header";
+import Form from "../../components/shared/Form";
+import { Field } from "../../components/shared/Form";
 import { useUserAuth } from "../../hooks/useUserAuth";
 import loginImg from "../../assets/img/login.jpg";
 
@@ -12,9 +13,9 @@ const Login: React.FC = () => {
   const { login, loading } = useUserAuth();
 
   // Fields for the form
-  const fields = [
-    { name: "username", label: "Username", type: "text" },
-    { name: "password", label: "Password", type: "password" },
+  const fields: Field[] = [
+    { name: "username", label: "Username", type: "text", required: true },
+    { name: "password", label: "Password", type: "password", required: true },
   ];
 
   // Initial values
@@ -93,7 +94,7 @@ const Login: React.FC = () => {
         <Box sx={{ width: "80%", maxWidth: 350 }}>
           <AuthHeader title="Login" />
 
-          <UserForm
+          <Form
             fields={fields}
             initialValues={initialValues}
             validate={validate}

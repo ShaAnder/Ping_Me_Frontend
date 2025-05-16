@@ -9,10 +9,10 @@ import Home from "./pages/Home";
 import Popular from "./pages/Popular";
 import ToggleColorMode from "./contexts/ToggleColorMode";
 import Server from "./pages/Server";
-import Login from "./pages/userHandling/Login";
-import Signup from "./pages/userHandling/Signup";
-import ForgotPassword from "./pages/userHandling/Forget";
-import ResetPassword from "./pages/userHandling/Reset";
+import Login from "./pages/userAuthPages/Login";
+import Signup from "./pages/userAuthPages/Signup";
+import ForgotPassword from "./pages/userAuthPages/Forget";
+import ResetPassword from "./pages/userAuthPages/Reset";
 import { UserAuthProvider } from "./services/UserAuthProvider";
 
 // import ProtectedRoute from "./services/ProtectedRoute";
