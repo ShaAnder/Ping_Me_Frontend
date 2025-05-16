@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Grid, Box, Typography, Button, useTheme } from "@mui/material";
 import axios from "axios";
-import AuthModal from "../../components/shared/AuthModal";
+import Modal from "../../components/shared/Modal";
 import AuthHeader from "../../components/shared/Header";
 import Form from "../../components/shared/Form";
 import { Field } from "../../components/shared/Form";
@@ -148,7 +148,7 @@ const ResetPassword: React.FC = () => {
             footer={footer}
           />
         </Box>
-        <AuthModal
+        <Modal
           open={modalOpen}
           onClose={() => {
             setModalOpen(false);
@@ -172,7 +172,7 @@ const ResetPassword: React.FC = () => {
             Your password has been reset successfully. You can now log in with
             your new password.
           </Typography>
-        </AuthModal>
+        </Modal>
       </Grid>
       {/* Right: Image (67%) */}
       <Grid

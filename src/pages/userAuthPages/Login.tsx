@@ -7,6 +7,8 @@ import { Field } from "../../components/shared/Form";
 import { useUserAuth } from "../../hooks/useUserAuth";
 import loginImg from "../../assets/img/login.jpg";
 
+import ResendVerificationButton from "./userAuthPageComponents/ResendVerification";
+
 const Login: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
@@ -51,26 +53,48 @@ const Login: React.FC = () => {
   };
 
   const footer = (
-    <Typography variant="body2" sx={{ mt: 2 }}>
-      Don't have an account?
-      <Link
-        component={RouterLink}
-        to="/signup"
-        sx={{
-          fontWeight: 600,
-          ml: 1,
-          textDecoration: "none",
-          color: "primary.main",
-          cursor: "pointer",
-          "&:hover": {
-            textDecoration: "underline",
-            color: "primary.dark",
-          },
-        }}
-      >
-        Sign up
-      </Link>
-    </Typography>
+    <>
+      <Typography variant="body2" sx={{ mt: 2 }}>
+        Don't have an account?
+        <Link
+          component={RouterLink}
+          to="/signup"
+          sx={{
+            fontWeight: 600,
+            ml: 1,
+            textDecoration: "none",
+            color: "primary.main",
+            cursor: "pointer",
+            "&:hover": {
+              textDecoration: "underline",
+              color: "primary.dark",
+            },
+          }}
+        >
+          Sign up
+        </Link>
+      </Typography>
+      <Typography variant="body2" sx={{ mt: 2 }}>
+        Forgot Your
+        <Link
+          component={RouterLink}
+          to="/forgot"
+          sx={{
+            fontWeight: 600,
+            ml: 1,
+            textDecoration: "none",
+            color: "primary.main",
+            cursor: "pointer",
+            "&:hover": {
+              textDecoration: "underline",
+              color: "primary.dark",
+            },
+          }}
+        >
+          Password?
+        </Link>
+      </Typography>
+    </>
   );
 
   return (
@@ -103,6 +127,18 @@ const Login: React.FC = () => {
             loading={loading}
             footer={footer}
           />
+        </Box>
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: 350,
+            display: "flex",
+            justifyContent: "left",
+            margin: 0,
+          }}
+        >
+          {/* ...your form and footer... */}
+          <ResendVerificationButton />
         </Box>
       </Grid>
       {/* Right: Image (67%) */}

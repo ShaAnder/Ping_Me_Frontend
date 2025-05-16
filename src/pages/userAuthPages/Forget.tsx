@@ -3,12 +3,12 @@ import React, { useState } from "react";
 import { Grid, Box, Typography, Link, useTheme, Button } from "@mui/material";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import axios from "axios";
-import AuthModal from "../../components/shared/AuthModal";
+import Modal from "../../components/shared/Modal";
 import AuthHeader from "../../components/shared/Header";
 import Form from "../../components/shared/Form";
 import { Field } from "../../components/shared/Form";
 import { BASE_URL } from "../../api/config";
-import forgotImg from "../../assets/img/forgot.jpg"; // Use a relevant image for forgot password
+import forgotImg from "../../assets/img/forgot.jpg";
 
 const ForgotPassword: React.FC = () => {
   const theme = useTheme();
@@ -108,7 +108,7 @@ const ForgotPassword: React.FC = () => {
             footer={footer}
           />
         </Box>
-        <AuthModal
+        <Modal
           open={modalOpen}
           onClose={() => {
             setModalOpen(false);
@@ -137,7 +137,7 @@ const ForgotPassword: React.FC = () => {
           >
             You will be redirected to the login page shortly.
           </Typography>
-        </AuthModal>
+        </Modal>
       </Grid>
       {/* Right: Image (67%) */}
       <Grid

@@ -23,7 +23,7 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Login />} />
       <Route path="/signup" element={<Signup />} />
       <Route path="/forgot" element={<ForgotPassword />} />
-      <Route path="/app/reset/:uid/:token" element={<ResetPassword />} />
+      <Route path="/reset/:uid/:token" element={<ResetPassword />} />
       <Route path="/" element={<Home />} />
       <Route path="/server/:serverId/:channelId?" element={<Server />} />
       <Route path="/explore/:categoryName" element={<Popular />} />

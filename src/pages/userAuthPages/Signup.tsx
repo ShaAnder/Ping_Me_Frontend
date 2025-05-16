@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Grid, Box, Typography, Link, useTheme, Button } from "@mui/material";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
 import axios from "axios";
-import AuthModal from "../../components/shared/AuthModal";
+import Modal from "../../components/shared/Modal";
 import AuthHeader from "../../components/shared/Header";
 import Form from "../../components/shared/Form";
 import { Field } from "../../components/shared/Form";
@@ -68,26 +68,48 @@ const Signup: React.FC = () => {
 
   // Footer: Already have an account? Login
   const footer = (
-    <Typography variant="body2" sx={{ mt: 2 }}>
-      Already have an account?
-      <Link
-        component={RouterLink}
-        to="/login"
-        sx={{
-          fontWeight: 600,
-          ml: 1,
-          textDecoration: "none",
-          color: "primary.main",
-          cursor: "pointer",
-          "&:hover": {
-            textDecoration: "underline",
-            color: "primary.dark",
-          },
-        }}
-      >
-        Login
-      </Link>
-    </Typography>
+    <>
+      <Typography variant="body2" sx={{ mt: 2 }}>
+        Already have an account?
+        <Link
+          component={RouterLink}
+          to="/login"
+          sx={{
+            fontWeight: 600,
+            ml: 1,
+            textDecoration: "none",
+            color: "primary.main",
+            cursor: "pointer",
+            "&:hover": {
+              textDecoration: "underline",
+              color: "primary.dark",
+            },
+          }}
+        >
+          Login
+        </Link>
+      </Typography>{" "}
+      <Typography variant="body2" sx={{ mt: 2 }}>
+        Forgot Your
+        <Link
+          component={RouterLink}
+          to="/forgot"
+          sx={{
+            fontWeight: 600,
+            ml: 1,
+            textDecoration: "none",
+            color: "primary.main",
+            cursor: "pointer",
+            "&:hover": {
+              textDecoration: "underline",
+              color: "primary.dark",
+            },
+          }}
+        >
+          Password?
+        </Link>
+      </Typography>
+    </>
   );
 
   return (
@@ -119,7 +141,7 @@ const Signup: React.FC = () => {
             footer={footer}
           />
         </Box>
-        <AuthModal
+        <Modal
           open={modalOpen}
           onClose={() => {
             setModalOpen(false);
@@ -148,7 +170,7 @@ const Signup: React.FC = () => {
           >
             You will be redirected to the login page shortly.
           </Typography>
-        </AuthModal>
+        </Modal>
       </Grid>
       {/* Right: Image (67%) */}
       <Grid
