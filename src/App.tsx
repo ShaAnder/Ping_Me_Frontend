@@ -9,11 +9,13 @@ import Home from "./pages/Home";
 import Popular from "./pages/Popular";
 import ToggleColorMode from "./contexts/ToggleColorMode";
 import Server from "./pages/Server";
+import EditProfile from "./pages/EditProfile";
 import Login from "./pages/userAuthPages/Login";
 import Signup from "./pages/userAuthPages/Signup";
 import ForgotPassword from "./pages/userAuthPages/Forget";
 import ResetPassword from "./pages/userAuthPages/Reset";
 import { UserAuthProvider } from "./services/UserAuthProvider";
+import { ServerProvider } from "./services/ServerProvider";
 
 // import ProtectedRoute from "./services/ProtectedRoute";
 
@@ -25,6 +27,7 @@ const router = createBrowserRouter(
       <Route path="/forgot" element={<ForgotPassword />} />
       <Route path="/reset/:uid/:token" element={<ResetPassword />} />
       <Route path="/" element={<Home />} />
+      <Route path="/profile/edit/" element={<EditProfile />} />
       <Route path="/server/:serverId/:channelId?" element={<Server />} />
       <Route path="/explore/:categoryName" element={<Popular />} />
     </>
@@ -35,9 +38,11 @@ const App: React.FC = () => {
   return (
     <>
       <UserAuthProvider>
-        <ToggleColorMode>
-          <RouterProvider router={router} />
-        </ToggleColorMode>
+        <ServerProvider>
+          <ToggleColorMode>
+            <RouterProvider router={router} />
+          </ToggleColorMode>
+        </ServerProvider>
       </UserAuthProvider>
     </>
   );

@@ -2,8 +2,9 @@ export interface UserInterface {
   id: number;
   username: string;
   email: string;
-  avatar: string;
+  image: string;
+  image_url?: string;
   location: string;
-  description: string;
+  content: string;
   servers: ServerInterface[];
 }

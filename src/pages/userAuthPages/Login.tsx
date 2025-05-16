@@ -134,7 +134,7 @@ const Login: React.FC = () => {
             maxWidth: 350,
             display: "flex",
             justifyContent: "left",
-            margin: 0,
+            mt: 1,
           }}
         >
           {/* ...your form and footer... */}

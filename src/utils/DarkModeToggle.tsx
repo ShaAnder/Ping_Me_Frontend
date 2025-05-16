@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { ColorModeContext } from "../../contexts/DarkModeContext";
+import { ColorModeContext } from "../contexts/DarkModeContext";
 import { useTheme } from "@mui/material/styles";
 import { IconButton, Typography, Box } from "@mui/material";
 import ToggleOffIcon from "@mui/icons-material/ToggleOff";

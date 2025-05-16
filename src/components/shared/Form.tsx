@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   TextField,
@@ -16,10 +16,12 @@ type Field = {
   name: string;
   label: string;
   type: "text" | "password" | "email" | "file" | "checkbox" | "select";
-  accept?: string; // e.g., "image/*"
-  options?: { label: string; value: string }[]; // for select
-  required?: boolean; // for validation
-  defaultImage?: string; // for file/image preview fallback
+  accept?: string;
+  options?: { label: string; value: string }[];
+  multiline?: boolean;
+  rows?: number;
+  required?: boolean;
+  defaultImage?: string;
 };
 
 interface FormProps<T> {
@@ -30,6 +32,7 @@ interface FormProps<T> {
   submitLabel: string;
   loading?: boolean;
   footer?: React.ReactNode;
+  disabled?: boolean;
 }
 
 function Form<T extends Record<string, any>>({
@@ -40,10 +43,10 @@ function Form<T extends Record<string, any>>({
   submitLabel,
   loading,
   footer,
+  disabled,
 }: FormProps<T>) {
   const theme = useTheme();
   const [previews, setPreviews] = useState<Record<string, string | null>>({});
-  const fileInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const formik = useFormik<T>({
     initialValues,
@@ -51,100 +54,109 @@ function Form<T extends Record<string, any>>({
     onSubmit,
   });
 
-  // Helper: open file dialog for a specific field
-  const handleImageClick = (fieldName: string) => {
-    fileInputRefs.current[fieldName]?.click();
-  };
-
-  // Helper: handle file change and preview
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    fieldName: string
-  ) => {
-    const file = e.currentTarget.files?.[0] || null;
-    formik.setFieldValue(fieldName, file);
-
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setPreviews((prev) => ({
-          ...prev,
-          [fieldName]: event.target?.result as string,
-        }));
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setPreviews((prev) => ({
-        ...prev,
-        [fieldName]: null,
-      }));
-    }
-  };
-
   return (
     <form onSubmit={formik.handleSubmit} autoComplete="off">
-      {fields.map((field) => (
-        <Box sx={{ mb: 2 }} key={field.name}>
-          <Typography variant="subtitle1" sx={{ mb: 0.5 }}>
-            {field.label}
-          </Typography>
-          {field.type === "file" ? (
-            <Box sx={{ display: "flex", alignItems: "center" }}>
-              <input
-                ref={(el) => {
-                  fileInputRefs.current[field.name] = el;
-                }}
-                id={field.name}
-                name={field.name}
-                type="file"
-                accept={field.accept}
-                style={{ display: "none" }}
-                onChange={(e) => handleFileChange(e, field.name)}
-              />
-              <Box
+      {fields.map((field) => {
+        if (field.type === "file" && field.name === "image") {
+          return (
+            <Box
+              key={field.name}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                mb: 3,
+              }}
+            >
+              <Button
+                variant="outlined"
+                component="label"
                 sx={{
-                  width: 80,
-                  height: 80,
-                  borderRadius: "50%",
-                  background: "#eee",
+                  borderRadius: 2,
+                  width: 160,
+                  height: 160,
+                  p: 0,
+                  mb: 1,
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  cursor: "pointer",
-                  overflow: "hidden",
-                  border: "2px solid #ccc",
+                  border: 2,
+                  background: "#fff",
                 }}
-                onClick={() => handleImageClick(field.name)}
+                disabled={disabled}
               >
-                {previews[field.name] ? (
-                  <Avatar
-                    src={previews[field.name] as string}
-                    alt="preview"
-                    sx={{ width: 80, height: 80 }}
-                  />
-                ) : field.defaultImage ? (
-                  <Avatar
-                    src={field.defaultImage}
-                    alt="default"
-                    sx={{ width: 80, height: 80 }}
-                  />
-                ) : (
-                  <ImageIcon sx={{ fontSize: 40, color: "#aaa" }} />
-                )}
-              </Box>
+                <Avatar
+                  src={previews[field.name] || field.defaultImage || undefined}
+                  sx={{
+                    width: 150,
+                    height: 150,
+                    borderRadius: 2,
+                    fontSize: 64,
+                    bgcolor: "primary.main",
+                  }}
+                >
+                  <ImageIcon sx={{ fontSize: 64, color: "#fff" }} />
+                </Avatar>
+                <input
+                  id={field.name}
+                  name={field.name}
+                  type="file"
+                  accept="image/jpeg,image/png,image/gif,image/webp,image/jpg"
+                  style={{ display: "none" }}
+                  onChange={(e) => {
+                    const file = e.currentTarget.files?.[0] || null;
+                    formik.setFieldValue(field.name, file, true);
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        setPreviews((prev) => ({
+                          ...prev,
+                          [field.name]: event.target?.result as string,
+                        }));
+                      };
+                      reader.readAsDataURL(file);
+                    } else {
+                      setPreviews((prev) => ({
+                        ...prev,
+                        [field.name]: null,
+                      }));
+                    }
+                  }}
+                  disabled={disabled}
+                />
+              </Button>
+              <Typography variant="caption" color="text.secondary">
+                Click to change avatar
+              </Typography>
+              {formik.errors[field.name] && (
+                <Typography color="error" variant="caption">
+                  {formik.errors[field.name] as string}
+                </Typography>
+              )}
             </Box>
-          ) : (
+          );
+        }
+
+        // Default rendering for other fields
+        return (
+          <Box sx={{ mb: 2 }} key={field.name}>
+            <Typography variant="subtitle1" sx={{ mb: 0.5 }}>
+              {field.label}
+            </Typography>
             <TextField
               id={field.name}
               name={field.name}
               type={field.type}
               size="small"
               fullWidth
-              value={formik.values[field.name]}
+              value={formik.values[field.name] ?? ""}
               onChange={formik.handleChange}
               error={Boolean(formik.errors[field.name])}
               helperText={formik.errors[field.name] as string | undefined}
               variant="outlined"
+              multiline={field.multiline}
+              rows={field.rows}
+              disabled={disabled}
               sx={{
                 "& .MuiOutlinedInput-root": {
                   backgroundColor: "background.default",
@@ -156,20 +168,20 @@ function Form<T extends Record<string, any>>({
                 },
               }}
             />
-          )}
-          {formik.errors[field.name] && (
-            <Typography color="error" variant="caption">
-              {formik.errors[field.name] as string}
-            </Typography>
-          )}
-        </Box>
-      ))}
+            {formik.errors[field.name] && (
+              <Typography color="error" variant="caption">
+                {formik.errors[field.name] as string}
+              </Typography>
+            )}
+          </Box>
+        );
+      })}
       <Button
         type="submit"
         variant="contained"
         fullWidth
         size="medium"
-        disabled={formik.isSubmitting || loading}
+        disabled={formik.isSubmitting || loading || disabled}
         sx={{
           py: 1.5,
           fontSize: 18,

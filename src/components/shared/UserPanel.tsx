@@ -55,7 +55,7 @@ const UserPanel: React.FC = () => {
           }}
           onClick={() => setCardOpen(true)}
         >
-          <Avatar src={user.avatar || undefined} alt={user.username} />
+          <Avatar src={user.image_url || undefined} alt={user.username} />
           <Typography variant="body2" sx={{ ml: 1 }}>
             {user.username}
           </Typography>

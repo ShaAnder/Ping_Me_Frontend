@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
-import { Button, Typography, TextField, Box } from "@mui/material";
+import { Button, Typography, TextField } from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import axios from "axios";
 import { BASE_URL } from "../../../api/config";
@@ -49,7 +49,7 @@ const ResendVerificationButton: React.FC = () => {
         startIcon={<MailOutlineIcon />}
         onClick={() => setModalOpen(true)}
         variant="text"
-        sx={{ textTransform: "none" }}
+        sx={{ textTransform: "none", pl: 0.3 }}
       >
         Resend verification email
       </Button>

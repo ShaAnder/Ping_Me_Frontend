@@ -1,3 +1,4 @@
+import React from "react";
 import {
   List,
   ListItem,
@@ -5,33 +6,22 @@ import {
   Box,
   useTheme,
   ListItemIcon,
+  ListItemAvatar,
+  Typography,
 } from "@mui/material";
-import useCrud from "../../hooks/useFetchCRUDData";
-import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
+import { useServerContext } from "../../hooks/useServerContext";
 
-interface Category {
-  id: number;
-  name: string;
-  description: string;
-  category_icon_url: string;
-}
-
-const Explore = () => {
+const Explore: React.FC = () => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
-  const { dataCRUD, fetchData } = useCrud<Category>([], "api/categories/");
-
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const { categories, loadingCategories } = useServerContext();
 
   return (
-    <>
+    <React.Fragment>
       <Box
         sx={{
-          height: "50px",
+          height: 50,
           display: "flex",
           alignItems: "center",
           px: 4,
@@ -48,43 +38,61 @@ const Explore = () => {
         Explore
       </Box>
       <List sx={{ py: 0 }}>
-        {dataCRUD.map((item) => (
-          <ListItem
-            disablePadding
-            key={item.id}
-            sx={{ display: "block" }}
-            dense={true}
+        {loadingCategories ? (
+          <Typography
+            variant="body2"
+            sx={{ px: 4, py: 2, color: theme.palette.text.secondary }}
+          ></Typography>
+        ) : categories.length === 0 ? (
+          <Typography
+            variant="body2"
+            sx={{ px: 4, py: 2, color: theme.palette.text.secondary }}
           >
-            <Link
-              to={`/explore/${item.name}`}
-              style={{ textDecoration: "none", color: "inherit" }}
+            No categories found.
+          </Typography>
+        ) : (
+          categories.map((item) => (
+            <ListItem
+              disablePadding
+              key={item.id}
+              sx={{ display: "block" }}
+              dense
             >
-              <ListItemButton sx={{ minHeight: 48, fontFamily: "verdana" }}>
-                <ListItemIcon sx={{ justifyContent: "center" }}>
-                  <ListItemAvatar
-                    sx={{ minWidth: 0, alignItems: "center", display: "flex" }}
-                  >
-                    <img
-                      alt="category icon"
-                      src={item.category_icon_url}
-                      style={{
-                        width: 25,
-                        height: 25,
-                        borderRadius: "8px",
-                        objectFit: "cover",
-                        opacity: 0.8,
-                        filter: isDarkMode ? "invert(100%)" : "none",
+              <Link
+                to={`/explore/${encodeURIComponent(item.name)}`}
+                style={{ textDecoration: "none", color: "inherit" }}
+              >
+                <ListItemButton sx={{ minHeight: 48, fontFamily: "verdana" }}>
+                  <ListItemIcon sx={{ justifyContent: "center" }}>
+                    <ListItemAvatar
+                      sx={{
+                        minWidth: 0,
+                        alignItems: "center",
+                        display: "flex",
                       }}
-                    />
-                  </ListItemAvatar>
-                </ListItemIcon>
-                {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
-              </ListItemButton>
-            </Link>
-          </ListItem>
-        ))}
+                    >
+                      <img
+                        alt={`${item.name} category icon`}
+                        src={item.category_icon_url}
+                        style={{
+                          width: 25,
+                          height: 25,
+                          borderRadius: 8,
+                          objectFit: "cover",
+                          opacity: 0.8,
+                          filter: isDarkMode ? "invert(100%)" : "none",
+                        }}
+                      />
+                    </ListItemAvatar>
+                  </ListItemIcon>
+                  {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+                </ListItemButton>
+              </Link>
+            </ListItem>
+          ))
+        )}
       </List>
-    </>
+    </React.Fragment>
   );
 };
 

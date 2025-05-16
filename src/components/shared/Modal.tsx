@@ -32,7 +32,7 @@ const Modal: React.FC<ModalProps> = ({
       onClose={onClose}
       PaperProps={{
         sx: {
-          backgroundColor: theme.palette.background.paper,
+          backgroundColor: theme.palette.background.default,
           color: theme.palette.text.primary,
           borderRadius: 3,
           boxShadow: 12,

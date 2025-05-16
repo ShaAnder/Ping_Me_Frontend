@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Field } from "../shared/Form";
-import { validateImageFile } from "./imageValidation";
+import { Field } from "../components/shared/Form";
 
 export function validateFormFields<T>(
   fields: Field[],
@@ -11,15 +10,12 @@ export function validateFormFields<T>(
   fields.forEach((field) => {
     const value = (values as Record<string, any>)[field.name];
 
+    // Only check required fields (except files, which are optional unless required)
     if (field.type === "file") {
-      const imageError = validateImageFile(value);
-      if (imageError) {
-        errors[field.name] = imageError;
-      }
       if (field.required && !value) {
         errors[field.name] = "This image is required.";
       }
-    } else if (field.required && !value) {
+    } else if (field.required && (!value || value === "")) {
       errors[field.name] = `${field.label} is required.`;
     }
   });

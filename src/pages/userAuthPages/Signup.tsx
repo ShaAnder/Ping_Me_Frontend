@@ -5,8 +5,7 @@ import { useNavigate, Link as RouterLink } from "react-router-dom";
 import axios from "axios";
 import Modal from "../../components/shared/Modal";
 import AuthHeader from "../../components/shared/Header";
-import Form from "../../components/shared/Form";
-import { Field } from "../../components/shared/Form";
+import Form, { Field } from "../../components/shared/Form";
 import { BASE_URL } from "../../api/config";
 import signUpImg from "../../assets/img/signup.jpg";
 
@@ -15,7 +14,7 @@ const Signup: React.FC = () => {
   const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
 
-  // Form fields definition
+  // Form fields
   const fields: Field[] = [
     { name: "username", label: "Username", type: "text", required: true },
     { name: "email", label: "Email", type: "email", required: true },
@@ -23,7 +22,7 @@ const Signup: React.FC = () => {
     { name: "password", label: "Password", type: "password", required: true },
   ];
 
-  // Formik initial values
+  // Initial values
   const initialValues = {
     username: "",
     email: "",
@@ -31,7 +30,7 @@ const Signup: React.FC = () => {
     password: "",
   };
 
-  // Formik validation
+  // Validation
   const validate = (values: typeof initialValues) => {
     const errors: Record<string, string> = {};
     if (!values.username) errors.username = "Username is required";
@@ -43,13 +42,13 @@ const Signup: React.FC = () => {
     return errors;
   };
 
-  // Formik submit handler
+  // Submit handler
   const onSubmit = async (
     values: typeof initialValues,
     { setSubmitting, setErrors }: any
   ) => {
     try {
-      await axios.post(`${BASE_URL}/api/account/register/`, values);
+      await axios.patch(`${BASE_URL}/api/account/register/`, values);
       setModalOpen(true);
       setTimeout(() => {
         setModalOpen(false);
@@ -66,9 +65,9 @@ const Signup: React.FC = () => {
     }
   };
 
-  // Footer: Already have an account? Login
+  // Footer links
   const footer = (
-    <>
+    <Box>
       <Typography variant="body2" sx={{ mt: 2 }}>
         Already have an account?
         <Link
@@ -88,9 +87,9 @@ const Signup: React.FC = () => {
         >
           Login
         </Link>
-      </Typography>{" "}
+      </Typography>
       <Typography variant="body2" sx={{ mt: 2 }}>
-        Forgot Your
+        Forgot your
         <Link
           component={RouterLink}
           to="/forgot"
@@ -106,15 +105,15 @@ const Signup: React.FC = () => {
             },
           }}
         >
-          Password?
+          password?
         </Link>
       </Typography>
-    </>
+    </Box>
   );
 
   return (
     <Grid container sx={{ height: "100vh" }}>
-      {/* Left: Form (33%) */}
+      {/* Left: Form */}
       <Grid
         item
         xs={12}
@@ -172,7 +171,7 @@ const Signup: React.FC = () => {
           </Typography>
         </Modal>
       </Grid>
-      {/* Right: Image (67%) */}
+      {/* Right: Image */}
       <Grid
         item
         xs={false}
