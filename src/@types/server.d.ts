@@ -5,6 +5,9 @@ export interface ServerInterface {
   description: string;
   category: string;
   category_name: string;
+  created_at: string;
+  num_members?: number;
+
   server_image_urls: {
     server_icon_url: string;
     banner_image_url: string;

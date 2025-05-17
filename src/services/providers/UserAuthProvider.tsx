@@ -1,8 +1,8 @@
 import React, { useState, useEffect, ReactNode } from "react";
 import axios from "axios";
-import { UserInterface } from "../@types/user";
-import { BASE_URL } from "../api/config";
-import { UserAuthContext } from "../contexts/UserAuthContext";
+import { UserInterface } from "../../@types/user";
+import { BASE_URL } from "../../api/config";
+import { UserAuthContext } from "../../contexts/UserAuthContext";
 
 export const UserAuthProvider: React.FC<{ children: ReactNode }> = ({
   children,

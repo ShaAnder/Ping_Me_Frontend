@@ -1,20 +1,51 @@
-import React, { useState, useEffect, ReactNode } from "react";
+import React, { useState, useEffect, ReactNode, useCallback } from "react";
 import axios from "axios";
-import { BASE_URL } from "../api/config";
-import { ServerContext } from "../contexts/ServerContext";
-import { ServerInterface } from "../@types/server";
-import { CategoryInterface } from "../@types/category";
-import { NewServerData } from "../contexts/ServerContext";
+import { BASE_URL } from "../../api/config";
+import { ServerContext } from "../../contexts/ServerContext";
+import { ServerInterface } from "../../@types/server";
+import { CategoryInterface } from "../../@types/category";
+import { NewServerData } from "../../contexts/ServerContext";
+
+// Message type
+export interface Message {
+  sender: string;
+  content: string;
+  timestamp_created: string;
+  timestamp_updated: string;
+}
 
 export const ServerProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [servers, setServers] = useState<ServerInterface[]>([]);
+  const [servers, setServers] = useState<ServerInterface[] | null>(null);
   const [categories, setCategories] = useState<CategoryInterface[]>([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
-  const [loadingServers, setLoadingServers] = useState(false);
+  const [loadingServers, setLoadingServers] = useState(true);
 
-  // Fetch all servers (optionally by category)
+  // --- Messages state ---
+  const [messagesByChannel, setMessagesByChannel] = useState<{
+    [channelId: string]: Message[];
+  }>({});
+  const [loadingMessages, setLoadingMessages] = useState(false);
+
+  // Fetch messages for a given channel
+  const fetchMessagesForChannel = useCallback(async (channelId: string) => {
+    setLoadingMessages(true);
+    try {
+      const token = localStorage.getItem("access_token");
+      if (!token) throw new Error("No access token");
+      const res = await axios.get<Message[]>(
+        `${BASE_URL}/api/messages/?channel_id=${channelId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setMessagesByChannel((prev) => ({ ...prev, [channelId]: res.data }));
+    } catch {
+      setMessagesByChannel((prev) => ({ ...prev, [channelId]: [] }));
+    }
+    setLoadingMessages(false);
+  }, []);
+
+  // --- Servers and categories logic ---
   const refreshServers = async (categoryName?: string) => {
     setLoadingServers(true);
     try {
@@ -29,14 +60,12 @@ export const ServerProvider: React.FC<{ children: ReactNode }> = ({
       });
       setServers(res.data);
     } catch {
-      setServers([]);
+      setServers([]); // If fetch fails, set to empty array
     }
     setLoadingServers(false);
   };
 
-  // Fetch all categories (only on mount or explicit refresh)
   const refreshCategories = async () => {
-    console.log("Fetching categories...");
     setLoadingCategories(true);
     try {
       const token = localStorage.getItem("access_token");
@@ -55,10 +84,9 @@ export const ServerProvider: React.FC<{ children: ReactNode }> = ({
     setLoadingCategories(false);
   };
 
-  // Fetch categories ONCE on mount
   useEffect(() => {
+    refreshServers();
     refreshCategories();
-    // eslint-disable-next-line
   }, []);
 
   const addServer = async (data: NewServerData) => {
@@ -80,6 +108,10 @@ export const ServerProvider: React.FC<{ children: ReactNode }> = ({
         refreshServers,
         refreshCategories,
         addServer,
+        // --- messages context values ---
+        messagesByChannel,
+        loadingMessages,
+        fetchMessagesForChannel,
       }}
     >
       {children}

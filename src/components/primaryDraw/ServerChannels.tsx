@@ -1,15 +1,43 @@
-import { List, ListItem, ListItemButton, Box, useTheme } from "@mui/material";
+import {
+  List,
+  ListItem,
+  ListItemButton,
+  Box,
+  useTheme,
+  Typography,
+} from "@mui/material";
 import { Link, useParams } from "react-router-dom";
 import { ServerInterface } from "../../@types/server";
 
-interface ServerChannelProps {
-  data: ServerInterface[];
+export interface ServerChannelProps {
+  server: ServerInterface | null;
 }
 
-const ServerChannel = (props: ServerChannelProps) => {
-  const { data } = props;
+const ServerChannel = ({ server }: ServerChannelProps) => {
   const theme = useTheme();
   const { serverId } = useParams();
+
+  if (!server) {
+    return (
+      <Box sx={{ p: 2, textAlign: "center", color: "text.secondary" }}>
+        <Typography variant="body2">No server selected.</Typography>
+      </Box>
+    );
+  }
+
+  // Defensive: if channel_server is missing or not an array
+  if (
+    !Array.isArray(server.channel_server) ||
+    server.channel_server.length === 0
+  ) {
+    return (
+      <Box sx={{ p: 2, textAlign: "center", color: "text.secondary" }}>
+        <Typography variant="body2">
+          No channels found for this server.
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -18,7 +46,7 @@ const ServerChannel = (props: ServerChannelProps) => {
           height: "50px",
           display: "flex",
           alignItems: "center",
-          justifyContent: "center", // Centers content horizontally
+          justifyContent: "center",
           p: 1,
           fontSize: 16,
           letterSpacing: 1,
@@ -31,37 +59,35 @@ const ServerChannel = (props: ServerChannelProps) => {
           whiteSpace: "nowrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
-          textAlign: "center", // Ensures text inside is centered
+          textAlign: "center",
         }}
       >
-        {data[0]?.name.length > 20
-          ? `${data[0]?.name.slice(0, 20)}...`
-          : data[0]?.name}
+        {server.name.length > 20
+          ? `${server.name.slice(0, 20)}...`
+          : server.name}
       </Box>
       <List sx={{ py: 0 }}>
-        {data.flatMap((obj) =>
-          obj.channel_server.map((item) => (
-            <ListItem
-              disablePadding
-              key={item.id}
-              sx={{ display: "block" }}
-              dense={true}
+        {server.channel_server.map((channel) => (
+          <ListItem
+            disablePadding
+            key={channel.id}
+            sx={{ display: "block" }}
+            dense={true}
+          >
+            <Link
+              to={`/server/${serverId}/${channel.id}`}
+              style={{ textDecoration: "none", color: "inherit" }}
             >
-              <Link
-                to={`/server/${serverId}/${item.id}`}
-                style={{ textDecoration: "none", color: "inherit" }}
-              >
-                <ListItemButton sx={{ minHeight: 48, fontFamily: "verdana" }}>
-                  {item.type === "text" ? (
-                    <>#️ {item.name}</>
-                  ) : (
-                    <>🔊 {item.name}</>
-                  )}
-                </ListItemButton>
-              </Link>
-            </ListItem>
-          ))
-        )}
+              <ListItemButton sx={{ minHeight: 48, fontFamily: "verdana" }}>
+                {channel.type === "text" ? (
+                  <>#️ {channel.name}</>
+                ) : (
+                  <>🔊 {channel.name}</>
+                )}
+              </ListItemButton>
+            </Link>
+          </ListItem>
+        ))}
       </List>
     </>
   );

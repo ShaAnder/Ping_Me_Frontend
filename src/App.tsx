@@ -14,8 +14,9 @@ import Login from "./pages/userAuthPages/Login";
 import Signup from "./pages/userAuthPages/Signup";
 import ForgotPassword from "./pages/userAuthPages/Forget";
 import ResetPassword from "./pages/userAuthPages/Reset";
-import { UserAuthProvider } from "./services/UserAuthProvider";
-import { ServerProvider } from "./services/ServerProvider";
+import { UserAuthProvider } from "./services/providers/UserAuthProvider";
+import { ServerProvider } from "./services/providers/ServerProvider";
+import { UserServerProvider } from "./services/providers/UserServerProvider";
 
 // import ProtectedRoute from "./services/ProtectedRoute";
 
@@ -39,9 +40,11 @@ const App: React.FC = () => {
     <>
       <UserAuthProvider>
         <ServerProvider>
-          <ToggleColorMode>
-            <RouterProvider router={router} />
-          </ToggleColorMode>
+          <UserServerProvider>
+            <ToggleColorMode>
+              <RouterProvider router={router} />
+            </ToggleColorMode>
+          </UserServerProvider>
         </ServerProvider>
       </UserAuthProvider>
     </>
