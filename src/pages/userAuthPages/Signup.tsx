@@ -48,7 +48,7 @@ const Signup: React.FC = () => {
     { setSubmitting, setErrors }: any
   ) => {
     try {
-      await axios.patch(`${BASE_URL}/api/account/register/`, values);
+      await axios.post(`${BASE_URL}/api/account/register/`, values);
       setModalOpen(true);
       setTimeout(() => {
         setModalOpen(false);
