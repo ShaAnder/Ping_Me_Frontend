@@ -1,9 +1,15 @@
 import { Box, AppBar, Toolbar } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { ReactNode } from "react";
 
-const Nav = () => {
+interface NavProps {
+  rightAction?: ReactNode;
+  serverName?: string;
+}
+
+const Nav = ({ rightAction, serverName }: NavProps) => {
   const theme = useTheme();
-  const pageTitle = "PingMe Home";
+  const pageTitle = serverName;
   return (
     <AppBar
       sx={{
@@ -39,7 +45,7 @@ const Nav = () => {
         </Box>
 
         {/* Right-side actions */}
-        <Box sx={{ display: "flex", gap: 1 }}></Box>
+        <Box sx={{ display: "flex", gap: 1 }}>{rightAction}</Box>
       </Toolbar>
     </AppBar>
   );

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   List,
   ListItem,
@@ -5,36 +6,64 @@ import {
   Box,
   useTheme,
   Typography,
+  IconButton,
+  Tooltip,
+  TextField,
+  Button,
+  Divider,
 } from "@mui/material";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { ServerInterface } from "../../@types/server";
+import AddChannel from "./AddChannel";
+import { useUserAuth } from "../../hooks/useUserAuth";
+import axios from "axios";
+import { BASE_URL } from "../../api/config";
+import Modal from "../shared/Modal";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export interface ServerChannelProps {
   server: ServerInterface | null;
+  onChannelRefresh: () => void;
 }
 
-const ServerChannel = ({ server }: ServerChannelProps) => {
+const ServerChannel = ({ server, onChannelRefresh }: ServerChannelProps) => {
   const theme = useTheme();
   const { serverId } = useParams();
+  const { user } = useUserAuth();
+  const navigate = useNavigate();
+
+  const isOwner = user?.id === server?.owner_id;
+
+  // Delete server modal state
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteInput, setDeleteInput] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+  const [showAddChannel, setShowAddChannel] = useState(false);
+
+  const handleDeleteServer = async () => {
+    setDeleting(true);
+    setDeleteError("");
+    try {
+      const token = localStorage.getItem("access_token");
+      await axios.delete(`${BASE_URL}/api/servers/${server?.id}/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setShowDeleteModal(false);
+      navigate("/"); // Redirect after deletion
+    } catch (err) {
+      console.log(err);
+      setDeleteError("Failed to delete server. Please try again.");
+    }
+    setDeleting(false);
+  };
 
   if (!server) {
     return (
       <Box sx={{ p: 2, textAlign: "center", color: "text.secondary" }}>
         <Typography variant="body2">No server selected.</Typography>
-      </Box>
-    );
-  }
-
-  // Defensive: if channel_server is missing or not an array
-  if (
-    !Array.isArray(server.channel_server) ||
-    server.channel_server.length === 0
-  ) {
-    return (
-      <Box sx={{ p: 2, textAlign: "center", color: "text.secondary" }}>
-        <Typography variant="body2">
-          No channels found for this server.
-        </Typography>
       </Box>
     );
   }
@@ -55,7 +84,7 @@ const ServerChannel = ({ server }: ServerChannelProps) => {
           position: "sticky",
           top: 0,
           backgroundColor: theme.palette.background.default,
-          mb: 1,
+
           whiteSpace: "nowrap",
           overflow: "hidden",
           textOverflow: "ellipsis",
@@ -66,6 +95,101 @@ const ServerChannel = ({ server }: ServerChannelProps) => {
           ? `${server.name.slice(0, 20)}...`
           : server.name}
       </Box>
+
+      {isOwner && (
+        <Box
+          display="flex"
+          alignItems="center"
+          justifyContent="space-evenly"
+          sx={{ width: "100%", mt: 0, mb: 0 }}
+        >
+          <Tooltip title="Add Channel">
+            <IconButton
+              color="success"
+              size="large"
+              onClick={() => setShowAddChannel(true)}
+              sx={{ borderRadius: 0, p: 1, m: 0, width: "33.33%" }}
+            >
+              <AddCircleIcon sx={{ fontSize: 28, color: "#43a047" }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Edit Server">
+            <IconButton
+              color="primary"
+              size="large"
+              onClick={() => navigate(`/server/${server.id}/edit`)}
+              sx={{ borderRadius: 0, p: 1, m: 0, width: "33.33%" }}
+            >
+              <EditIcon sx={{ fontSize: 28, color: "#1976d2" }} />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete Server">
+            <IconButton
+              color="error"
+              size="large"
+              onClick={() => setShowDeleteModal(true)}
+              sx={{ borderRadius: 0, p: 1, m: 0, width: "33.33%" }}
+            >
+              <DeleteIcon sx={{ fontSize: 28, color: "#d32f2f" }} />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      )}
+
+      {/* Add Channel Modal */}
+      <AddChannel
+        open={showAddChannel}
+        onClose={() => setShowAddChannel(false)}
+        serverId={server.id}
+        isOwner={isOwner}
+        onChannelAdded={() => {
+          setShowAddChannel(false);
+          onChannelRefresh();
+        }}
+      />
+
+      {/* Delete Server Modal */}
+      <Modal
+        open={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        title="Delete Server"
+        actions={
+          <>
+            <Button
+              onClick={() => setShowDeleteModal(false)}
+              disabled={deleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleDeleteServer}
+              color="error"
+              variant="contained"
+              disabled={deleteInput !== server.name || deleting}
+            >
+              Delete
+            </Button>
+          </>
+        }
+      >
+        <Typography sx={{ mb: 2 }}>
+          Are you sure you wish to delete <b>{server.name}</b>?<br />
+          This action cannot be undone.
+          <br />
+          Please type <b>{server.name}</b> to confirm.
+        </Typography>
+        <TextField
+          label="Server Name"
+          value={deleteInput}
+          onChange={(e) => setDeleteInput(e.target.value)}
+          fullWidth
+          autoFocus
+          error={!!deleteError}
+          helperText={deleteError}
+          disabled={deleting}
+        />
+      </Modal>
+      <Divider />
       <List sx={{ py: 0 }}>
         {server.channel_server.map((channel) => (
           <ListItem

@@ -1,47 +1,74 @@
-import { AppBar, Toolbar, Typography, useTheme } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  useTheme,
+  Button,
+  Box,
+} from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { ServerInterface } from "../../@types/server";
 import { useParams } from "react-router-dom";
+import { useUserAuth } from "../../hooks/useUserAuth";
 
 interface ServerChannelProps {
   data: ServerInterface[];
+  onDeleteChannel?: () => void; // Optional: callback for delete
 }
 
 const MessageInterfaceChannels = (props: ServerChannelProps) => {
   const theme = useTheme();
-  const { data } = props;
+  const { data, onDeleteChannel } = props;
   const { serverId, channelId } = useParams();
-  const channelName =
-    data
-      ?.find((server) => server.id == Number(serverId))
-      ?.channel_server?.find((channel) => channel.id === Number(channelId))
-      ?.name || "home";
+  const { user } = useUserAuth();
+
+  const server = data?.find((server) => server.id == Number(serverId));
+  const channel = server?.channel_server?.find(
+    (channel) => channel.id === Number(channelId)
+  );
+  const channelName = channel?.name || "home";
+
+  // You may need to adjust these fields depending on your user/server shape
+  const isServerOwner = user && server && user.id === server.owner_id;
 
   return (
-    <>
-      <AppBar
+    <AppBar
+      sx={{
+        backgroundColor: theme.palette.background.default,
+        borderBottom: `1px solid ${theme.palette.divider}`,
+      }}
+      color="default"
+      position="sticky"
+      elevation={0}
+    >
+      <Toolbar
+        variant="dense"
         sx={{
-          backgroundColor: theme.palette.background.default,
-          borderBottom: `1px solid ${theme.palette.divider}`,
+          minHeight: "49px",
+          height: "49px",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
         }}
-        color="default"
-        position="sticky"
-        elevation={0}
       >
-        <Toolbar
-          variant="dense"
-          sx={{
-            minHeight: "49px",
-            height: "49px",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Typography noWrap component="div">
-            # {channelName}
+        <Box sx={{ flex: 1, textAlign: "left" }}>
+          <Typography noWrap component="div" fontWeight={600} fontSize="1.1rem">
+            #{channelName}
           </Typography>
-        </Toolbar>
-      </AppBar>
-    </>
+        </Box>
+        {isServerOwner && onDeleteChannel && (
+          <Button
+            color="error"
+            startIcon={<DeleteIcon />}
+            onClick={onDeleteChannel}
+            size="small"
+            sx={{ ml: 2 }}
+          >
+            Delete
+          </Button>
+        )}
+      </Toolbar>
+    </AppBar>
   );
 };
 

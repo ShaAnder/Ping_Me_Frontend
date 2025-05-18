@@ -176,27 +176,29 @@ function Form<T extends Record<string, any>>({
           </Box>
         );
       })}
-      <Button
-        type="submit"
-        variant="contained"
-        fullWidth
-        size="medium"
-        disabled={formik.isSubmitting || loading || disabled}
-        sx={{
-          py: 1.5,
-          fontSize: 18,
-          fontWeight: 700,
-          borderRadius: 2,
-          mb: 1.5,
-          textTransform: "none",
-        }}
-      >
-        {formik.isSubmitting || loading ? (
-          <CircularProgress size={24} />
-        ) : (
-          submitLabel
-        )}
-      </Button>
+      {submitLabel && (
+        <Button
+          type="submit"
+          variant="contained"
+          fullWidth
+          size="medium"
+          disabled={formik.isSubmitting || loading || disabled}
+          sx={{
+            py: 1.5,
+            fontSize: 18,
+            fontWeight: 700,
+            borderRadius: 2,
+            mb: 1.5,
+            textTransform: "none",
+          }}
+        >
+          {formik.isSubmitting || loading ? (
+            <CircularProgress size={24} />
+          ) : (
+            submitLabel
+          )}
+        </Button>
+      )}
       {footer}
     </form>
   );

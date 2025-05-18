@@ -13,7 +13,7 @@ import UserPanel from "../components/shared/UserPanel";
 const Home = () => {
   return (
     <>
-      <Nav />
+      <Nav serverName="PingMe Home" />
       <Box sx={{ display: "flex", width: "100%" }}>
         {/* Sidebar - Server List */}
         <ServerList>

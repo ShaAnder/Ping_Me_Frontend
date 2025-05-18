@@ -7,6 +7,8 @@ export interface ServerInterface {
   category_name: string;
   created_at: string;
   num_members?: number;
+  owner: string;
+  owner_id: number;
 
   server_image_urls: {
     server_icon_url: string;

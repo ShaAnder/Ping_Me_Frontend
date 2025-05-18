@@ -1,24 +1,25 @@
-import useWebSocket from "react-use-websocket";
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useServerContext } from "../../hooks/useServerContext";
-import { ServerInterface } from "../../@types/server.d";
+import { useParams, useNavigate } from "react-router-dom";
+import useWebSocket from "react-use-websocket";
 import {
   Box,
-  Typography,
   List,
-  ListItem,
-  ListItemAvatar,
-  Avatar,
-  ListItemText,
   useTheme,
   TextField,
   CircularProgress,
+  Button,
+  Stack,
 } from "@mui/material";
+import Message from "./Message";
 import MessageInterfaceChannels from "./MessageInterfaceChannels";
 import MainScroll from "./MainScroll";
-
+import { useServerContext } from "../../hooks/useServerContext";
+import { useUserAuth } from "../../hooks/useUserAuth";
+import { ServerInterface } from "../../@types/server";
 import { MessageTypeInterface } from "../../@types/message";
+import axios from "axios";
+import { BASE_URL } from "../../api/config";
+import Modal from "../shared/Modal";
 
 export interface MessageInterfaceProps {
   server: ServerInterface | null;
@@ -29,14 +30,22 @@ const MessageInterface = ({ server }: MessageInterfaceProps) => {
   const { serverId, channelId } = useParams();
   const { fetchMessagesForChannel, messagesByChannel, loadingMessages } =
     useServerContext();
-
+  const { user } = useUserAuth();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<MessageTypeInterface[]>([]);
+  const [editingMsg, setEditingMsg] = useState<MessageTypeInterface | null>(
+    null
+  );
+  const [deletingMsg, setDeletingMsg] = useState<MessageTypeInterface | null>(
+    null
+  );
+  const [deletingChannel, setDeletingChannel] = useState(false); // <-- NEW
+  const navigate = useNavigate();
+  const token = localStorage.getItem("access_token");
 
   // Fetch messages when channel changes
   useEffect(() => {
     if (channelId) {
-      // Fetch messages from context or API
       fetchMessagesForChannel(channelId);
     }
   }, [channelId, fetchMessagesForChannel]);
@@ -48,12 +57,12 @@ const MessageInterface = ({ server }: MessageInterfaceProps) => {
     }
   }, [channelId, messagesByChannel]);
 
-  // WebSocket for real-time messages
+  // WebSocket setup
   const socketURL = channelId
-    ? `wss://ping-me-pp5-backend-6aaeef173b97.herokuapp.com/${serverId}/${channelId}`
+    ? `wss://ping-me-pp5-backend-6aaeef173b97.herokuapp.com/${serverId}/${channelId}?token=${token}`
     : null;
 
-  useWebSocket(socketURL, {
+  const { sendJsonMessage } = useWebSocket(socketURL, {
     onMessage: (msg) => {
       try {
         const data = JSON.parse(msg.data);
@@ -67,48 +76,96 @@ const MessageInterface = ({ server }: MessageInterfaceProps) => {
     shouldReconnect: () => true,
   });
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      // sendJsonMessage logic here (add sendJsonMessage from useWebSocket if needed)
+  // Send or edit message
+  const handleSendMessage = async () => {
+    if (!user || !user.username || !message.trim()) return;
+
+    if (editingMsg) {
+      // Edit mode
+      try {
+        await axios.patch(
+          `${BASE_URL}/api/messages/${editingMsg.id}/`,
+          { content: message },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setEditingMsg(null);
+        setMessage("");
+        if (channelId) fetchMessagesForChannel(channelId);
+      } catch (err) {
+        console.error("Failed to edit message:", err);
+      }
+    } else {
+      // Send mode
+      sendJsonMessage({
+        type: "message",
+        message,
+      });
       setMessage("");
     }
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // sendJsonMessage logic here (add sendJsonMessage from useWebSocket if needed)
-    setMessage("");
+  // Start editing
+  const handleEditMessage = (msg: MessageTypeInterface) => {
+    setEditingMsg(msg);
+    setMessage(msg.content);
   };
 
-  const formatTimeStamp = (timestamp: string) => {
-    const date = new Date(Date.parse(timestamp));
-    const formattedDate = `${date.getDate()}/${
-      date.getMonth() + 1
-    }/${date.getFullYear()}`;
-    const formattedTime = date.toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-    return [formattedTime, formattedDate];
+  // Start delete confirmation
+  const handleDeleteMessage = (msg: MessageTypeInterface) => {
+    setDeletingMsg(msg);
+  };
+
+  // Confirm delete
+  const confirmDelete = async () => {
+    if (!deletingMsg) return;
+    try {
+      await axios.delete(`${BASE_URL}/api/messages/${deletingMsg.id}/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setDeletingMsg(null);
+      if (channelId) fetchMessagesForChannel(channelId);
+    } catch (err) {
+      console.error("Failed to delete message:", err);
+    }
+  };
+
+  // Cancel delete
+  const cancelDelete = () => setDeletingMsg(null);
+
+  // Channel delete logic
+  const handleDeleteChannel = () => setDeletingChannel(true);
+  const confirmDeleteChannel = async () => {
+    try {
+      await axios.delete(`${BASE_URL}/api/channels/${channelId}/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setDeletingChannel(false);
+      // Optionally navigate to server home or refresh
+      navigate(`/server/${serverId}`);
+    } catch (err) {
+      console.log(err);
+      setDeletingChannel(false);
+      alert("Failed to delete channel.");
+    }
   };
 
   if (!server) {
     return (
       <Box sx={{ p: 4 }}>
-        <Typography color="error">No server data available.</Typography>
+        <span>No server data available.</span>
       </Box>
     );
   }
 
-  const server_name = server.name ?? "Server";
-  const server_description = server.description ?? "This is our home";
-
   return (
     <>
-      <MessageInterfaceChannels data={[server]} />
-      {channelId == undefined ? (
+      {server && (
+        <MessageInterfaceChannels
+          data={[server]}
+          onDeleteChannel={handleDeleteChannel}
+        />
+      )}
+      {channelId === undefined ? (
         <Box
           sx={{
             display: "flex",
@@ -119,18 +176,8 @@ const MessageInterface = ({ server }: MessageInterfaceProps) => {
             p: 0,
           }}
         >
-          <Typography
-            variant="h4"
-            fontWeight={700}
-            letterSpacing="-0.5px"
-            align="center"
-            sx={{ px: 5, maxWidth: 600 }}
-          >
-            Welcome to {server_name}
-          </Typography>
-          <Typography align="center" sx={{ mt: 2 }}>
-            {server_description}
-          </Typography>
+          <span>Welcome to {server.name ?? "Server"}</span>
+          <span>{server.description ?? "This is our home"}</span>
         </Box>
       ) : loadingMessages ? (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
@@ -141,75 +188,23 @@ const MessageInterface = ({ server }: MessageInterfaceProps) => {
           <Box sx={{ overflow: "hidden", p: 0, height: `calc(100vh - 98px)` }}>
             <MainScroll>
               <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-                {messages.map((msg: MessageTypeInterface, index: number) => (
-                  <ListItem key={index} alignItems="flex-start">
-                    <ListItemAvatar>
-                      <Avatar alt="userImg" />
-                    </ListItemAvatar>
-                    <ListItemText
-                      primaryTypographyProps={{
-                        fontSize: "12px",
-                        variant: "body2",
-                      }}
-                      primary={
-                        <>
-                          <Typography
-                            component="span"
-                            variant="body1"
-                            color="text.primary"
-                            sx={{ display: "inline", fontWeight: "600" }}
-                          >
-                            {msg.sender}
-                          </Typography>
-                          <Typography
-                            component="span"
-                            variant="caption"
-                            color="textSecondary"
-                            sx={{
-                              paddingLeft: 3,
-                              fontSize: 10,
-                            }}
-                          >
-                            {`${
-                              formatTimeStamp(msg?.timestamp_created)[0]
-                            }   |   ${
-                              formatTimeStamp(msg?.timestamp_created)[1]
-                            }`}
-                          </Typography>
-                        </>
-                      }
-                      secondary={
-                        <Box>
-                          <Typography
-                            component="div"
-                            variant="body1"
-                            style={{
-                              overflow: "visible",
-                              whiteSpace: "normal",
-                              textOverflow: "clip",
-                            }}
-                            sx={{
-                              display: "inline",
-                              lineHeight: 1.2,
-                              fontWeight: "400",
-                              letterSpacing: "-0.2px",
-                            }}
-                            color="text.primary"
-                          >
-                            {msg.content}
-                          </Typography>
-                        </Box>
-                      }
-                      secondaryTypographyProps={{ component: "span" }}
-                    />
-                  </ListItem>
+                {messages.map((msg) => (
+                  <Message
+                    key={msg.id}
+                    message={msg}
+                    onEdit={handleEditMessage}
+                    onDelete={handleDeleteMessage}
+                  />
                 ))}
               </List>
             </MainScroll>
           </Box>
           <Box sx={{ position: "sticky", bottom: 0, width: "100%" }}>
             <form
-              onSubmit={handleSubmit}
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSendMessage();
+              }}
               style={{
                 bottom: 0,
                 right: 0,
@@ -224,14 +219,78 @@ const MessageInterface = ({ server }: MessageInterfaceProps) => {
                   multiline
                   minRows={1}
                   maxRows={4}
-                  onKeyDown={handleKeyDown}
+                  placeholder={
+                    editingMsg ? "Edit your message..." : "Type a message..."
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSendMessage();
+                    }
+                  }}
                   onChange={(e) => setMessage(e.target.value)}
                   sx={{ flexGrow: 1 }}
                   value={message}
                 />
+                {editingMsg && (
+                  <Button
+                    sx={{ ml: 1 }}
+                    onClick={() => {
+                      setEditingMsg(null);
+                      setMessage("");
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                )}
               </Box>
             </form>
           </Box>
+          {/* Delete Message Confirmation Modal */}
+          <Modal
+            open={!!deletingMsg}
+            onClose={cancelDelete}
+            title="Delete this message?"
+            actions={
+              <Stack direction="row" spacing={2}>
+                <Button onClick={cancelDelete}>Cancel</Button>
+                <Button
+                  onClick={confirmDelete}
+                  color="error"
+                  variant="contained"
+                >
+                  Yes
+                </Button>
+              </Stack>
+            }
+            children={<></>} // <-- Fixes the TypeScript error!
+          />
+          {/* Delete Channel Confirmation Modal */}
+          <Modal
+            open={deletingChannel}
+            onClose={() => setDeletingChannel(false)}
+            title="Delete this channel?"
+            actions={
+              <Stack direction="row" spacing={2}>
+                <Button onClick={() => setDeletingChannel(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  onClick={confirmDeleteChannel}
+                  color="error"
+                  variant="contained"
+                >
+                  Delete
+                </Button>
+              </Stack>
+            }
+            children={
+              <Box>
+                Are you sure you want to delete this channel? This cannot be
+                undone.
+              </Box>
+            }
+          />
         </>
       )}
     </>

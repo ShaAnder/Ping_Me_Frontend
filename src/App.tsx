@@ -17,8 +17,9 @@ import ResetPassword from "./pages/userAuthPages/Reset";
 import { UserAuthProvider } from "./services/providers/UserAuthProvider";
 import { ServerProvider } from "./services/providers/ServerProvider";
 import { UserServerProvider } from "./services/providers/UserServerProvider";
-
-// import ProtectedRoute from "./services/ProtectedRoute";
+import EditServer from "./pages/EditServer";
+import ProtectedRoute from "./services/ProtectedRoute";
+import AddServer from "./pages/AddServer";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -27,10 +28,47 @@ const router = createBrowserRouter(
       <Route path="/signup" element={<Signup />} />
       <Route path="/forgot" element={<ForgotPassword />} />
       <Route path="/reset/:uid/:token" element={<ResetPassword />} />
-      <Route path="/" element={<Home />} />
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Home />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/profile/edit/" element={<EditProfile />} />
-      <Route path="/server/:serverId/:channelId?" element={<Server />} />
-      <Route path="/explore/:categoryName" element={<Popular />} />
+      <Route
+        path="/server/:serverId/:channelId?"
+        element={
+          <ProtectedRoute>
+            <Server />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/server/:serverId/edit"
+        element={
+          <ProtectedRoute>
+            <EditServer />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/explore/:categoryName"
+        element={
+          <ProtectedRoute>
+            <Popular />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/add_server"
+        element={
+          <ProtectedRoute>
+            <AddServer />
+          </ProtectedRoute>
+        }
+      />
     </>
   )
 );

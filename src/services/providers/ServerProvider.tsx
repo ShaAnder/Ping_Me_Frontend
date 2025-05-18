@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, ReactNode, useCallback } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../api/config";
@@ -5,6 +6,7 @@ import { ServerContext } from "../../contexts/ServerContext";
 import { ServerInterface } from "../../@types/server";
 import { CategoryInterface } from "../../@types/category";
 import { NewServerData } from "../../contexts/ServerContext";
+import { MessageTypeInterface } from "../../@types/message";
 
 // Message type
 export interface Message {
@@ -12,6 +14,7 @@ export interface Message {
   content: string;
   timestamp_created: string;
   timestamp_updated: string;
+  id: number;
 }
 
 export const ServerProvider: React.FC<{ children: ReactNode }> = ({
@@ -34,11 +37,26 @@ export const ServerProvider: React.FC<{ children: ReactNode }> = ({
     try {
       const token = localStorage.getItem("access_token");
       if (!token) throw new Error("No access token");
+
       const res = await axios.get<Message[]>(
         `${BASE_URL}/api/messages/?channel_id=${channelId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
-      setMessagesByChannel((prev) => ({ ...prev, [channelId]: res.data }));
+
+      // Map backend message fields to frontend MessageTypeInterface
+      const mappedMessages: MessageTypeInterface[] = res.data.map((msg) => ({
+        sender: (msg as any).sender_username || "",
+        content: msg.content,
+        timestamp_created: msg.timestamp_created,
+        timestamp_updated: msg.timestamp_updated,
+        avatar_url: (msg as any).sender_avatar_url || undefined,
+        id: msg.id,
+      }));
+
+      setMessagesByChannel((prev) => ({
+        ...prev,
+        [channelId]: mappedMessages,
+      }));
     } catch {
       setMessagesByChannel((prev) => ({ ...prev, [channelId]: [] }));
     }
