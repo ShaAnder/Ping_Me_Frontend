@@ -224,7 +224,9 @@ const MessageInterface = ({
               </List>
             </MainScroll>
           </Box>
-          <Box sx={{ position: "sticky", bottom: 0, width: "100%" }}>
+          <Box
+            sx={{ position: "sticky", bottom: 0, mb: "50px", width: "100%" }}
+          >
             <form
               onSubmit={(e) => {
                 e.preventDefault();
