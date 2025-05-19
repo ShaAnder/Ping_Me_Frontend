@@ -28,6 +28,7 @@ export const UserServerProvider: React.FC<{ children: ReactNode }> = ({
     fetchServers();
   }, [fetchServers]);
 
+  // Expose fetchServers as 'refresh' so it can be called after create/delete
   return (
     <UserServerContext.Provider
       value={{ servers, loading, refresh: fetchServers }}

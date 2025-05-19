@@ -39,14 +39,15 @@ const Message = ({ message, onEdit, onDelete }: MessageProps) => {
     message.timestamp_created
   );
 
-  const isOwnMessage = user && message.sender === user.username;
+  // Updated: check by user ID
+  const isOwnMessage = user && message.user && user.id === message.user.id;
 
   return (
     <ListItem alignItems="flex-start">
       <ListItemAvatar>
-        <Avatar alt={message.sender} src={message.avatar_url}>
-          {!message.avatar_url && message.sender
-            ? message.sender[0].toUpperCase()
+        <Avatar alt={message.user?.username} src={message.user?.image_url}>
+          {!message.user?.image_url && message.user?.username
+            ? message.user.username[0].toUpperCase()
             : null}
         </Avatar>
       </ListItemAvatar>
@@ -59,7 +60,7 @@ const Message = ({ message, onEdit, onDelete }: MessageProps) => {
               color="text.primary"
               sx={{ fontWeight: "600", mr: 1 }}
             >
-              {message.sender}
+              {message.user?.username}
             </Typography>
             <Typography
               component="span"
@@ -77,7 +78,7 @@ const Message = ({ message, onEdit, onDelete }: MessageProps) => {
                   onClick={() => onEdit && onEdit(message)}
                   aria-label="edit"
                 >
-                  <EditIcon fontSize="inherit" sx={{ fontSize: 14 }} />{" "}
+                  <EditIcon fontSize="inherit" sx={{ fontSize: 14 }} />
                 </IconButton>
                 <IconButton
                   size="small"

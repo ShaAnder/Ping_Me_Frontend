@@ -19,7 +19,13 @@ import {
 import axios from "axios";
 import { BASE_URL } from "../api/config";
 import { useNavigate } from "react-router-dom";
+import { useCategoriesContext } from "../hooks/useCategoryContext";
 import { useServerContext } from "../hooks/useServerContext";
+import { useUserServers } from "../hooks/useUserServers";
+
+// Import your placeholder images
+import avatarPlaceholder from "../assets/img/AvatarPlaceholder.jpg";
+import bannerPlaceholder from "../assets/img/BannerPlaceholder.jpeg";
 
 const AddServer: React.FC = () => {
   // File states
@@ -27,7 +33,9 @@ const AddServer: React.FC = () => {
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   const navigate = useNavigate();
-  const { categories, loadingCategories } = useServerContext();
+  const { categories, loading: categoriesLoading } = useCategoriesContext();
+  const { refreshServers } = useServerContext();
+  const { refresh: refreshUserServers } = useUserServers();
 
   const [bannerPreview, setBannerPreview] = useState<string | undefined>(
     undefined
@@ -35,7 +43,6 @@ const AddServer: React.FC = () => {
   const [avatarPreview, setAvatarPreview] = useState<string | undefined>(
     undefined
   );
-
   const bannerInputRef = useRef<HTMLInputElement>(null);
   const avatarInputRef = useRef<HTMLInputElement>(null);
 
@@ -47,7 +54,7 @@ const AddServer: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
 
   // Show loading state for categories
-  if (loadingCategories) {
+  if (categoriesLoading) {
     return (
       <Container maxWidth="sm" sx={{ py: 6 }}>
         <Paper
@@ -98,6 +105,9 @@ const AddServer: React.FC = () => {
           "Content-Type": "multipart/form-data",
         },
       });
+      // Refresh both main and user server lists before navigating
+      await refreshServers();
+      await refreshUserServers();
       navigate(`/server/${res.data.id}`);
     } catch (error: any) {
       if (error.response?.data?.detail) {
@@ -125,9 +135,9 @@ const AddServer: React.FC = () => {
           sx={{
             width: "100%",
             height: 120,
-            background: bannerPreview
-              ? `url(${bannerPreview}) center/cover no-repeat`
-              : "#e0e0e0",
+            background: `url(${
+              bannerPreview || bannerPlaceholder
+            }) center/cover no-repeat`,
             position: "relative",
             cursor: "pointer",
           }}
@@ -196,7 +206,7 @@ const AddServer: React.FC = () => {
               }}
             />
             <img
-              src={avatarPreview || "https://via.placeholder.com/80"}
+              src={avatarPreview || avatarPlaceholder}
               alt="Server Icon"
               style={{ width: 80, height: 80, objectFit: "cover" }}
             />

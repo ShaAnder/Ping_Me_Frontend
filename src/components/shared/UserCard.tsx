@@ -11,13 +11,14 @@ import DarkModeSwitch from "../../utils/DarkModeToggle";
 import { useTheme } from "@mui/material/styles";
 import { UserInterface } from "../../@types/user";
 
-// Define the props for UserCard
 interface UserCardProps {
   open: boolean;
   anchorEl: HTMLElement | null;
   onClose: () => void;
   user: UserInterface;
 }
+
+const MAX_DESCRIPTION_LENGTH = 200;
 
 const UserCard: React.FC<UserCardProps> = ({
   open,
@@ -29,12 +30,19 @@ const UserCard: React.FC<UserCardProps> = ({
   const location = useLocation();
   const theme = useTheme();
 
+  // Calculate the width to match the user panel
+  const panelWidth = `calc(${theme.serverList.width}px + ${theme.primaryDraw.width}px - 1px)`;
+
   const handleEditProfile = () => {
     onClose();
     navigate("/profile/edit", { state: { from: location.pathname } });
   };
 
-  const panelWidth = `calc(${theme.serverList.width}px + ${theme.primaryDraw.width}px - 1px)`;
+  // Truncate description
+  const description =
+    user.content && user.content.length > MAX_DESCRIPTION_LENGTH
+      ? user.content.slice(0, MAX_DESCRIPTION_LENGTH) + "…"
+      : user.content || "";
 
   return (
     <Popover
@@ -45,7 +53,9 @@ const UserCard: React.FC<UserCardProps> = ({
       PaperProps={{
         elevation: 3,
         sx: {
+          width: panelWidth,
           minWidth: panelWidth,
+          maxWidth: panelWidth,
           mb: 1.5,
           ml: -2,
           borderRadius: 0,
@@ -55,7 +65,15 @@ const UserCard: React.FC<UserCardProps> = ({
       transformOrigin={{ vertical: "bottom", horizontal: "left" }}
       anchorOrigin={{ vertical: "top", horizontal: "left" }}
     >
-      <Card sx={{ boxShadow: "none", borderRadius: 0 }}>
+      <Card
+        sx={{
+          boxShadow: "none",
+          borderRadius: 0,
+          width: panelWidth,
+          minWidth: panelWidth,
+          maxWidth: panelWidth,
+        }}
+      >
         <CardContent sx={{ p: 2 }}>
           {/* Avatar and Name Row */}
           <Box sx={{ display: "flex", alignItems: "center", mb: 2 }}>
@@ -63,7 +81,10 @@ const UserCard: React.FC<UserCardProps> = ({
               src={user.image_url}
               sx={{ width: 56, height: 56, mr: 2 }}
             />
-            <Typography variant="h6" sx={{ fontWeight: 600 }}>
+            <Typography
+              variant="h6"
+              sx={{ fontWeight: 600, wordBreak: "break-word" }}
+            >
               {user.username}
             </Typography>
           </Box>
@@ -79,8 +100,9 @@ const UserCard: React.FC<UserCardProps> = ({
             <Typography
               variant="body2"
               sx={{
-                minHeight: "1.5em", // Ensures space even if empty
+                minHeight: "1.5em",
                 color: user.location ? "inherit" : "text.disabled",
+                wordBreak: "break-word",
               }}
             >
               {user.location || ""}
@@ -98,11 +120,13 @@ const UserCard: React.FC<UserCardProps> = ({
             <Typography
               variant="body2"
               sx={{
-                minHeight: "2.5em", // Ensures space even if empty
+                minHeight: "2.5em",
                 color: user.content ? "inherit" : "text.disabled",
+                wordBreak: "break-word",
+                whiteSpace: "pre-line",
               }}
             >
-              {user.content || ""}
+              {description}
             </Typography>
           </Box>
         </CardContent>

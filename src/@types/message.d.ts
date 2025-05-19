@@ -1,8 +1,9 @@
+import { UserInterface } from "./user";
+
 export interface MessageTypeInterface {
-  sender: string;
+  id: number;
+  user: UserInterface;
   content: string;
   timestamp_created: string;
   timestamp_updated: string;
-  avatar_url?: string;
-  id: number;
 }

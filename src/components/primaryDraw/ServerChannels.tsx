@@ -22,10 +22,13 @@ import Modal from "../shared/Modal";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useServerContext } from "../../hooks/useServerContext";
+import { useUserServers } from "../../hooks/useUserServers";
 
 export interface ServerChannelProps {
   server: ServerInterface | null;
   onChannelRefresh: () => void;
+  onServerDeleted: () => void;
 }
 
 const ServerChannel = ({ server, onChannelRefresh }: ServerChannelProps) => {
@@ -33,6 +36,10 @@ const ServerChannel = ({ server, onChannelRefresh }: ServerChannelProps) => {
   const { serverId } = useParams();
   const { user } = useUserAuth();
   const navigate = useNavigate();
+
+  // Get the refresh functions for both contexts
+  const { refreshServers } = useServerContext();
+  const { refresh: refreshUserServers } = useUserServers();
 
   const isOwner = user?.id === server?.owner_id;
 
@@ -52,6 +59,9 @@ const ServerChannel = ({ server, onChannelRefresh }: ServerChannelProps) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setShowDeleteModal(false);
+      // Refresh both the main and user server lists
+      await refreshServers();
+      await refreshUserServers();
       navigate("/"); // Redirect after deletion
     } catch (err) {
       console.log(err);
@@ -84,7 +94,6 @@ const ServerChannel = ({ server, onChannelRefresh }: ServerChannelProps) => {
           position: "sticky",
           top: 0,
           backgroundColor: theme.palette.background.default,
-
           whiteSpace: "nowrap",
           overflow: "hidden",
           textOverflow: "ellipsis",

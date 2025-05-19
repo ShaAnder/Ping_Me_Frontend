@@ -13,7 +13,7 @@ import {
 import Message from "./Message";
 import MessageInterfaceChannels from "./MessageInterfaceChannels";
 import MainScroll from "./MainScroll";
-import { useServerContext } from "../../hooks/useServerContext";
+import { useMessagesContext } from "../../hooks/useMessagesContext";
 import { useUserAuth } from "../../hooks/useUserAuth";
 import { ServerInterface } from "../../@types/server";
 import { MessageTypeInterface } from "../../@types/message";
@@ -23,13 +23,20 @@ import Modal from "../shared/Modal";
 
 export interface MessageInterfaceProps {
   server: ServerInterface | null;
+  onChannelRefresh: () => void;
 }
 
-const MessageInterface = ({ server }: MessageInterfaceProps) => {
+const MessageInterface = ({
+  server,
+  onChannelRefresh,
+}: MessageInterfaceProps) => {
   const theme = useTheme();
   const { serverId, channelId } = useParams();
-  const { fetchMessagesForChannel, messagesByChannel, loadingMessages } =
-    useServerContext();
+  const {
+    fetchMessagesForChannel,
+    messagesByChannel,
+    loading: messagesLoading,
+  } = useMessagesContext();
   const { user } = useUserAuth();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<MessageTypeInterface[]>([]);
@@ -39,7 +46,7 @@ const MessageInterface = ({ server }: MessageInterfaceProps) => {
   const [deletingMsg, setDeletingMsg] = useState<MessageTypeInterface | null>(
     null
   );
-  const [deletingChannel, setDeletingChannel] = useState(false); // <-- NEW
+  const [deletingChannel, setDeletingChannel] = useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem("access_token");
 
@@ -140,7 +147,7 @@ const MessageInterface = ({ server }: MessageInterfaceProps) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setDeletingChannel(false);
-      // Optionally navigate to server home or refresh
+      onChannelRefresh();
       navigate(`/server/${serverId}`);
     } catch (err) {
       console.log(err);
@@ -179,7 +186,7 @@ const MessageInterface = ({ server }: MessageInterfaceProps) => {
           <span>Welcome to {server.name ?? "Server"}</span>
           <span>{server.description ?? "This is our home"}</span>
         </Box>
-      ) : loadingMessages ? (
+      ) : messagesLoading ? (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 4 }}>
           <CircularProgress />
         </Box>
@@ -263,7 +270,7 @@ const MessageInterface = ({ server }: MessageInterfaceProps) => {
                 </Button>
               </Stack>
             }
-            children={<></>} // <-- Fixes the TypeScript error!
+            children={<></>}
           />
           {/* Delete Channel Confirmation Modal */}
           <Modal

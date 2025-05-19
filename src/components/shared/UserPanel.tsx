@@ -1,4 +1,3 @@
-// UserPanel.tsx
 import React, { useState, useRef } from "react";
 import { useUserAuth } from "../../hooks/useUserAuth";
 import Avatar from "@mui/material/Avatar";

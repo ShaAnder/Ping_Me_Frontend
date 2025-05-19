@@ -1,7 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createContext } from "react";
-import { CategoryInterface } from "../@types/category.d";
 import { ServerInterface } from "../@types/server";
-import { MessageTypeInterface } from "../@types/message";
 
 export interface NewServerData {
   name: string;
@@ -17,15 +16,9 @@ export interface NewServerData {
 
 export interface ServerContextType {
   servers: ServerInterface[] | null;
-  categories: CategoryInterface[];
-  loadingCategories: boolean;
-  loadingServers: boolean;
+  loading: boolean;
   refreshServers: (categoryName?: string) => Promise<void>;
-  refreshCategories: () => Promise<void>;
-  addServer: (data: NewServerData) => Promise<void>;
-  messagesByChannel: { [channelId: string]: MessageTypeInterface[] };
-  loadingMessages: boolean;
-  fetchMessagesForChannel: (channelId: string) => Promise<void>;
+  addServer: (data: any) => Promise<void>;
 }
 
 export const ServerContext = createContext<ServerContextType | undefined>(

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Box, Typography, Grid, Container } from "@mui/material";
 import { useParams } from "react-router-dom";
-import { useServerContext } from "../../hooks/useServerContext";
+import { useServerContext } from "../../hooks/useServerContext"; // <-- your naming
 import { useUserServers } from "../../hooks/useUserServers";
 import Modal from "../../components/shared/Modal";
 import axios from "axios";
@@ -11,12 +11,14 @@ import PopularServerCard from "./PopularServerCard";
 
 const ExplorePopularServers: React.FC = () => {
   const { categoryName } = useParams();
-  const { servers, loadingServers, refreshServers } = useServerContext();
-
-  // Now from context!
+  const {
+    servers,
+    loading: serversLoading,
+    refreshServers,
+  } = useServerContext(); // <-- correct naming
   const {
     servers: userServers,
-    loading: loadingUserServers,
+    loading: userServersLoading,
     refresh: refreshUserServers,
   } = useUserServers();
 
@@ -76,7 +78,7 @@ const ExplorePopularServers: React.FC = () => {
         newSet.delete(server.id);
         return newSet;
       });
-      await refreshUserServers(); // <--- Refresh sidebar/user servers only!
+      await refreshUserServers();
     } catch (err) {
       console.log(err);
     }
@@ -129,7 +131,7 @@ const ExplorePopularServers: React.FC = () => {
         </Typography>
       </Box>
       <Grid container spacing={2} sx={{ mt: 2 }}>
-        {loadingServers || loadingUserServers ? (
+        {serversLoading || userServersLoading ? (
           <Typography sx={{ px: 2, py: 4 }}>Loading servers...</Typography>
         ) : !servers || servers.length === 0 ? (
           <Typography sx={{ px: 2, py: 4 }}>No servers found.</Typography>

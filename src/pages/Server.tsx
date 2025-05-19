@@ -16,7 +16,11 @@ import LeaveServerButton from "../components/shared/LeaveServerButton";
 const Server = () => {
   const navigate = useNavigate();
   const { serverId, channelId } = useParams();
-  const { servers, loadingServers, refreshServers } = useServerContext();
+  const {
+    servers,
+    loading: loadingServers,
+    refreshServers,
+  } = useServerContext();
 
   const currentServer = useMemo(() => {
     if (!Array.isArray(servers) || servers.length === 0) return null;
@@ -97,15 +101,17 @@ const Server = () => {
 
           <ServerChannel
             server={currentServer}
-            onChannelRefresh={() => {
-              refreshServers();
-            }}
+            onChannelRefresh={refreshServers}
+            onServerDeleted={refreshServers} // Pass refreshServers here!
           />
         </PrimaryDraw>
 
         {/* Main Content - Messages + Leave Button */}
         <Main>
-          <MessageInterface server={currentServer} />
+          <MessageInterface
+            server={currentServer}
+            onChannelRefresh={refreshServers}
+          />
         </Main>
 
         <UserPanel />

@@ -10,12 +10,12 @@ import {
   Typography,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useServerContext } from "../../hooks/useServerContext";
+import { useCategoriesContext } from "../../hooks/useCategoryContext";
 
 const Explore: React.FC = () => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
-  const { categories, loadingCategories } = useServerContext();
+  const { categories, loading: categoriesLoading } = useCategoriesContext();
 
   return (
     <React.Fragment>
@@ -38,11 +38,13 @@ const Explore: React.FC = () => {
         Explore
       </Box>
       <List sx={{ py: 0 }}>
-        {loadingCategories ? (
+        {categoriesLoading ? (
           <Typography
             variant="body2"
             sx={{ px: 4, py: 2, color: theme.palette.text.secondary }}
-          ></Typography>
+          >
+            Loading categories...
+          </Typography>
         ) : categories.length === 0 ? (
           <Typography
             variant="body2"

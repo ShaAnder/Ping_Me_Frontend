@@ -20,7 +20,7 @@ const AddChannel: React.FC<AddChannelProps> = ({
   isOwner,
 }) => {
   const [name, setName] = useState("");
-  const [type, setType] = useState<"text" | "voice">("text");
+  const [type, setType] = useState<"text">("text");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -34,7 +34,7 @@ const AddChannel: React.FC<AddChannelProps> = ({
           name,
           type,
           server: serverId,
-          description: type === "text" ? description : undefined,
+          description,
         },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -81,22 +81,19 @@ const AddChannel: React.FC<AddChannelProps> = ({
           select
           label="Type"
           value={type}
-          onChange={(e) => setType(e.target.value as "text" | "voice")}
+          onChange={(e) => setType(e.target.value as "text")}
           fullWidth
           margin="normal"
         >
           <MenuItem value="text">Text</MenuItem>
-          <MenuItem value="voice">Voice</MenuItem>
         </TextField>
-        {type === "text" && (
-          <TextField
-            label="Description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            fullWidth
-            margin="normal"
-          />
-        )}
+        <TextField
+          label="Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          fullWidth
+          margin="normal"
+        />
       </Modal>
     </>
   );

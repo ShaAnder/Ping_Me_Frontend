@@ -128,6 +128,7 @@ function Form<T extends Record<string, any>>({
               <Typography variant="caption" color="text.secondary">
                 Click to change avatar
               </Typography>
+              {/* Keep error display for file/image fields */}
               {formik.errors[field.name] && (
                 <Typography color="error" variant="caption">
                   {formik.errors[field.name] as string}
@@ -137,7 +138,7 @@ function Form<T extends Record<string, any>>({
           );
         }
 
-        // Default rendering for other fields
+        // Default rendering for other fields (NO duplicate error message)
         return (
           <Box sx={{ mb: 2 }} key={field.name}>
             <Typography variant="subtitle1" sx={{ mb: 0.5 }}>
@@ -168,11 +169,7 @@ function Form<T extends Record<string, any>>({
                 },
               }}
             />
-            {formik.errors[field.name] && (
-              <Typography color="error" variant="caption">
-                {formik.errors[field.name] as string}
-              </Typography>
-            )}
+            {/* No duplicate error Typography here! */}
           </Box>
         );
       })}

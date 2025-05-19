@@ -14,6 +14,9 @@ import { BASE_URL } from "../api/config";
 import { useNavigate, useParams } from "react-router-dom";
 import { ServerInterface } from "../@types/server";
 
+import avatarPlaceholder from "../assets/img/AvatarPlaceholder.jpg";
+import bannerPlaceholder from "../assets/img/BannerPlaceholder.jpeg";
+
 const EditServer: React.FC = () => {
   const { serverId } = useParams();
   const navigate = useNavigate();
@@ -194,9 +197,9 @@ const EditServer: React.FC = () => {
         sx={{
           width: "100%",
           height: 120,
-          background: bannerPreview
-            ? `url(${bannerPreview}) center/cover no-repeat`
-            : "#e0e0e0",
+          background: `url(${
+            bannerPreview || bannerPlaceholder
+          }) center/cover no-repeat`,
           position: "relative",
           cursor: "pointer",
         }}
@@ -243,7 +246,7 @@ const EditServer: React.FC = () => {
             onChange={handleAvatarChange}
           />
           <img
-            src={avatarPreview || "https://via.placeholder.com/80"}
+            src={avatarPreview || avatarPlaceholder}
             alt="Server Icon"
             style={{ width: 80, height: 80, objectFit: "cover" }}
           />

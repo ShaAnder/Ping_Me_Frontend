@@ -20,6 +20,8 @@ import { UserServerProvider } from "./services/providers/UserServerProvider";
 import EditServer from "./pages/EditServer";
 import ProtectedRoute from "./services/ProtectedRoute";
 import AddServer from "./pages/AddServer";
+import { CategoriesProvider } from "./services/providers/CatgoryProvider";
+import { MessagesProvider } from "./services/providers/MessagesProvider";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -77,13 +79,17 @@ const App: React.FC = () => {
   return (
     <>
       <UserAuthProvider>
-        <ServerProvider>
-          <UserServerProvider>
-            <ToggleColorMode>
-              <RouterProvider router={router} />
-            </ToggleColorMode>
-          </UserServerProvider>
-        </ServerProvider>
+        <CategoriesProvider>
+          <MessagesProvider>
+            <ServerProvider>
+              <UserServerProvider>
+                <ToggleColorMode>
+                  <RouterProvider router={router} />
+                </ToggleColorMode>
+              </UserServerProvider>
+            </ServerProvider>
+          </MessagesProvider>
+        </CategoriesProvider>
       </UserAuthProvider>
     </>
   );

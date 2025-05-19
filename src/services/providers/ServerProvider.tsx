@@ -4,110 +4,31 @@ import axios from "axios";
 import { BASE_URL } from "../../api/config";
 import { ServerContext } from "../../contexts/ServerContext";
 import { ServerInterface } from "../../@types/server";
-import { CategoryInterface } from "../../@types/category";
-import { NewServerData } from "../../contexts/ServerContext";
-import { MessageTypeInterface } from "../../@types/message";
-
-// Message type
-export interface Message {
-  sender: string;
-  content: string;
-  timestamp_created: string;
-  timestamp_updated: string;
-  id: number;
-}
 
 export const ServerProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [servers, setServers] = useState<ServerInterface[] | null>(null);
-  const [categories, setCategories] = useState<CategoryInterface[]>([]);
-  const [loadingCategories, setLoadingCategories] = useState(true);
-  const [loadingServers, setLoadingServers] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  // --- Messages state ---
-  const [messagesByChannel, setMessagesByChannel] = useState<{
-    [channelId: string]: Message[];
-  }>({});
-  const [loadingMessages, setLoadingMessages] = useState(false);
-
-  // Fetch messages for a given channel
-  const fetchMessagesForChannel = useCallback(async (channelId: string) => {
-    setLoadingMessages(true);
+  const refreshServers = useCallback(async (categoryName?: string) => {
+    setLoading(true);
     try {
       const token = localStorage.getItem("access_token");
       if (!token) throw new Error("No access token");
-
-      const res = await axios.get<Message[]>(
-        `${BASE_URL}/api/messages/?channel_id=${channelId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      // Map backend message fields to frontend MessageTypeInterface
-      const mappedMessages: MessageTypeInterface[] = res.data.map((msg) => ({
-        sender: (msg as any).sender_username || "",
-        content: msg.content,
-        timestamp_created: msg.timestamp_created,
-        timestamp_updated: msg.timestamp_updated,
-        avatar_url: (msg as any).sender_avatar_url || undefined,
-        id: msg.id,
-      }));
-
-      setMessagesByChannel((prev) => ({
-        ...prev,
-        [channelId]: mappedMessages,
-      }));
-    } catch {
-      setMessagesByChannel((prev) => ({ ...prev, [channelId]: [] }));
-    }
-    setLoadingMessages(false);
-  }, []);
-
-  // --- Servers and categories logic ---
-  const refreshServers = async (categoryName?: string) => {
-    setLoadingServers(true);
-    try {
-      const token = localStorage.getItem("access_token");
-      if (!token) throw new Error("No access token");
-
       let url = `${BASE_URL}/api/servers/`;
       if (categoryName) url += `?category=${encodeURIComponent(categoryName)}`;
-
       const res = await axios.get<ServerInterface[]>(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
       setServers(res.data);
     } catch {
-      setServers([]); // If fetch fails, set to empty array
+      setServers([]);
     }
-    setLoadingServers(false);
-  };
-
-  const refreshCategories = async () => {
-    setLoadingCategories(true);
-    try {
-      const token = localStorage.getItem("access_token");
-      if (!token) throw new Error("No access token");
-
-      const res = await axios.get<CategoryInterface[]>(
-        `${BASE_URL}/api/categories/`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      setCategories(res.data);
-    } catch {
-      setCategories([]);
-    }
-    setLoadingCategories(false);
-  };
-
-  useEffect(() => {
-    refreshServers();
-    refreshCategories();
+    setLoading(false);
   }, []);
 
-  const addServer = async (data: NewServerData) => {
+  const addServer = async (data: any) => {
     const token = localStorage.getItem("access_token");
     if (!token) throw new Error("No access token");
     await axios.post(`${BASE_URL}/api/servers/`, data, {
@@ -116,21 +37,13 @@ export const ServerProvider: React.FC<{ children: ReactNode }> = ({
     await refreshServers();
   };
 
+  useEffect(() => {
+    refreshServers();
+  }, [refreshServers]);
+
   return (
     <ServerContext.Provider
-      value={{
-        servers,
-        categories,
-        loadingServers,
-        loadingCategories,
-        refreshServers,
-        refreshCategories,
-        addServer,
-        // --- messages context values ---
-        messagesByChannel,
-        loadingMessages,
-        fetchMessagesForChannel,
-      }}
+      value={{ servers, loading, refreshServers, addServer }}
     >
       {children}
     </ServerContext.Provider>
