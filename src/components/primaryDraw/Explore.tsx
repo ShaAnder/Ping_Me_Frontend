@@ -9,13 +9,18 @@ import {
   ListItemAvatar,
   Typography,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useCategoriesContext } from "../../hooks/useCategoryContext";
 
-const Explore: React.FC = () => {
+type ExploreProps = {
+  onOpenMain?: () => void;
+};
+
+const Explore: React.FC<ExploreProps> = ({ onOpenMain }) => {
   const theme = useTheme();
   const isDarkMode = theme.palette.mode === "dark";
   const { categories, loading: categoriesLoading } = useCategoriesContext();
+  const navigate = useNavigate();
 
   return (
     <React.Fragment>
@@ -60,36 +65,39 @@ const Explore: React.FC = () => {
               sx={{ display: "block" }}
               dense
             >
-              <Link
-                to={`/explore/${encodeURIComponent(item.name)}`}
-                style={{ textDecoration: "none", color: "inherit" }}
+              <ListItemButton
+                sx={{ minHeight: 48, fontFamily: "verdana" }}
+                onClick={() => {
+                  if (onOpenMain) onOpenMain();
+                  setTimeout(() => {
+                    navigate(`/explore/${encodeURIComponent(item.name)}`);
+                  }, 0);
+                }}
               >
-                <ListItemButton sx={{ minHeight: 48, fontFamily: "verdana" }}>
-                  <ListItemIcon sx={{ justifyContent: "center" }}>
-                    <ListItemAvatar
-                      sx={{
-                        minWidth: 0,
-                        alignItems: "center",
-                        display: "flex",
+                <ListItemIcon sx={{ justifyContent: "center" }}>
+                  <ListItemAvatar
+                    sx={{
+                      minWidth: 0,
+                      alignItems: "center",
+                      display: "flex",
+                    }}
+                  >
+                    <img
+                      alt={`${item.name} category icon`}
+                      src={item.category_icon_url}
+                      style={{
+                        width: 25,
+                        height: 25,
+                        borderRadius: 8,
+                        objectFit: "cover",
+                        opacity: 0.8,
+                        filter: isDarkMode ? "invert(100%)" : "none",
                       }}
-                    >
-                      <img
-                        alt={`${item.name} category icon`}
-                        src={item.category_icon_url}
-                        style={{
-                          width: 25,
-                          height: 25,
-                          borderRadius: 8,
-                          objectFit: "cover",
-                          opacity: 0.8,
-                          filter: isDarkMode ? "invert(100%)" : "none",
-                        }}
-                      />
-                    </ListItemAvatar>
-                  </ListItemIcon>
-                  {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
-                </ListItemButton>
-              </Link>
+                    />
+                  </ListItemAvatar>
+                </ListItemIcon>
+                {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+              </ListItemButton>
             </ListItem>
           ))
         )}

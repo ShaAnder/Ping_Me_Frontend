@@ -7,37 +7,33 @@ type ServerListProps = {
 };
 
 const ServerList = ({ children }: ServerListProps) => {
-  // server list always visible, we populate the users servers on here
   const theme = useTheme();
 
   return (
-    <>
-      <Drawer
-        variant="permanent"
-        hideBackdrop
-        PaperProps={{
-          sx: {
-            mt: `${theme.nav.height}px`,
-            boxShadow: "none",
-            height: `calc(100vh - ${theme.nav.height}px)`,
-            width: theme.serverList.width,
-          },
+    <Drawer
+      variant="permanent"
+      hideBackdrop
+      PaperProps={{
+        sx: {
+          mt: `${theme.nav.height}px`,
+          boxShadow: "none",
+          height: `calc(100vh - ${theme.nav.height}px)`,
+          width: theme.serverList.width,
+          zIndex: 1202,
+        },
+      }}
+    >
+      <Box
+        sx={{
+          overflowY: "auto",
+          "&::-webkit-scrollbar": { display: "none" },
+          msOverflowStyle: "none",
+          scrollbarWidth: "none",
         }}
       >
-        <Box
-          sx={{
-            overflowY: "auto",
-            "&::-webkit-scrollbar": {
-              display: "none",
-            },
-            msOverflowStyle: "none", // IE/Edge
-            scrollbarWidth: "none", // Firefox
-          }}
-        >
-          {children}
-        </Box>
-      </Drawer>
-    </>
+        {children}
+      </Box>
+    </Drawer>
   );
 };
 

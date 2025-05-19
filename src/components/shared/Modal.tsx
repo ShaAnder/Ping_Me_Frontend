@@ -32,13 +32,17 @@ const Modal: React.FC<ModalProps> = ({
     <Dialog
       open={open}
       onClose={onClose}
+      sx={{
+        zIndex: 1000000, // Ensures Dialog root is on top
+      }}
       PaperProps={{
         sx: {
           backgroundColor: theme.palette.background.default,
           color: theme.palette.text.primary,
           borderRadius: 3,
           boxShadow: 12,
-          position: "relative", // Needed for absolute positioning of the close button
+          position: "relative",
+          zIndex: 1000001, // Ensures Paper is above everything else
         },
       }}
       {...dialogProps}
@@ -64,7 +68,7 @@ const Modal: React.FC<ModalProps> = ({
             fontWeight: 700,
             letterSpacing: 1,
             pb: 1,
-            pr: 5, // Make space for the close button
+            pr: 5,
           }}
         >
           {title}

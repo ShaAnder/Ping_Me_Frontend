@@ -9,7 +9,10 @@ import {
   CircularProgress,
   Button,
   Stack,
+  IconButton,
+  Tooltip,
 } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 import Message from "./Message";
 import MessageInterfaceChannels from "./MessageInterfaceChannels";
 import MainScroll from "./MainScroll";
@@ -24,11 +27,13 @@ import Modal from "../shared/Modal";
 export interface MessageInterfaceProps {
   server: ServerInterface | null;
   onChannelRefresh: () => void;
+  isMobile?: boolean; // <-- Add this prop
 }
 
 const MessageInterface = ({
   server,
   onChannelRefresh,
+  isMobile = false,
 }: MessageInterfaceProps) => {
   const theme = useTheme();
   const { serverId, channelId } = useParams();
@@ -50,21 +55,18 @@ const MessageInterface = ({
   const navigate = useNavigate();
   const token = localStorage.getItem("access_token");
 
-  // Fetch messages when channel changes
   useEffect(() => {
     if (channelId) {
       fetchMessagesForChannel(channelId);
     }
   }, [channelId, fetchMessagesForChannel]);
 
-  // Update local state when context messages change
   useEffect(() => {
     if (channelId && messagesByChannel[channelId]) {
       setMessages(messagesByChannel[channelId]);
     }
   }, [channelId, messagesByChannel]);
 
-  // WebSocket setup
   const socketURL = channelId
     ? `wss://ping-me-pp5-backend-6aaeef173b97.herokuapp.com/${serverId}/${channelId}?token=${token}`
     : null;
@@ -83,12 +85,10 @@ const MessageInterface = ({
     shouldReconnect: () => true,
   });
 
-  // Send or edit message
   const handleSendMessage = async () => {
     if (!user || !user.username || !message.trim()) return;
 
     if (editingMsg) {
-      // Edit mode
       try {
         await axios.patch(
           `${BASE_URL}/api/messages/${editingMsg.id}/`,
@@ -102,7 +102,6 @@ const MessageInterface = ({
         console.error("Failed to edit message:", err);
       }
     } else {
-      // Send mode
       sendJsonMessage({
         type: "message",
         message,
@@ -111,18 +110,15 @@ const MessageInterface = ({
     }
   };
 
-  // Start editing
   const handleEditMessage = (msg: MessageTypeInterface) => {
     setEditingMsg(msg);
     setMessage(msg.content);
   };
 
-  // Start delete confirmation
   const handleDeleteMessage = (msg: MessageTypeInterface) => {
     setDeletingMsg(msg);
   };
 
-  // Confirm delete
   const confirmDelete = async () => {
     if (!deletingMsg) return;
     try {
@@ -136,10 +132,8 @@ const MessageInterface = ({
     }
   };
 
-  // Cancel delete
   const cancelDelete = () => setDeletingMsg(null);
 
-  // Channel delete logic
   const handleDeleteChannel = () => setDeletingChannel(true);
   const confirmDeleteChannel = async () => {
     try {
@@ -164,12 +158,36 @@ const MessageInterface = ({
     );
   }
 
+  // Custom delete channel button for mobile/desktop
+  const deleteChannelButton = isMobile ? (
+    <Tooltip title="Delete Channel">
+      <IconButton
+        color="error"
+        sx={{ ml: 0, mr: 2 }} // move left a bit
+        onClick={handleDeleteChannel}
+      >
+        <DeleteIcon />
+      </IconButton>
+    </Tooltip>
+  ) : (
+    <Button
+      color="error"
+      variant="outlined"
+      startIcon={<DeleteIcon />}
+      onClick={handleDeleteChannel}
+      sx={{ ml: 2 }}
+    >
+      Delete Channel
+    </Button>
+  );
+
   return (
     <>
       {server && (
         <MessageInterfaceChannels
           data={[server]}
           onDeleteChannel={handleDeleteChannel}
+          deleteChannelButton={deleteChannelButton} // Pass the custom button
         />
       )}
       {channelId === undefined ? (

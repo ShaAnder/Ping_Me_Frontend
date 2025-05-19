@@ -50,6 +50,9 @@ const UserCard: React.FC<UserCardProps> = ({
       anchorEl={anchorEl}
       onClose={onClose}
       anchorReference="anchorEl"
+      sx={{
+        zIndex: 1000000, // Insanely high z-index for the popover root
+      }}
       PaperProps={{
         elevation: 3,
         sx: {
@@ -60,6 +63,7 @@ const UserCard: React.FC<UserCardProps> = ({
           ml: -2,
           borderRadius: 0,
           p: 0,
+          zIndex: 1000000, // Insanely high z-index for the paper itself
         },
       }}
       transformOrigin={{ vertical: "bottom", horizontal: "left" }}

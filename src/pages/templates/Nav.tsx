@@ -14,9 +14,10 @@ const Nav = ({ rightAction, serverName }: NavProps) => {
     <AppBar
       sx={{
         backgroundColor: theme.palette.background.default,
-        borderBottom: `1px solid ${theme.palette.divider}`,
-        zIndex: (theme) => theme.zIndex.drawer + 1,
+        zIndex: 10000,
+        boxShadow: "none",
       }}
+      elevation={0}
     >
       <Toolbar
         variant="dense"
@@ -41,12 +42,19 @@ const Nav = ({ rightAction, serverName }: NavProps) => {
             fontWeight: "bold",
           }}
         >
-          {pageTitle} {/* This can come from props/state */}
+          {pageTitle}
         </Box>
 
         {/* Right-side actions */}
         <Box sx={{ display: "flex", gap: 1 }}>{rightAction}</Box>
       </Toolbar>
+      {/* Divider at the bottom */}
+      <Box
+        sx={{
+          width: "100%",
+          borderBottom: `1px solid ${theme.palette.divider}`,
+        }}
+      />
     </AppBar>
   );
 };

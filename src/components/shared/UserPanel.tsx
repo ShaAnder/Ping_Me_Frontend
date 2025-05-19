@@ -8,6 +8,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useTheme } from "@mui/material/styles";
 import UserCard from "./UserCard";
 import { useNavigate } from "react-router-dom";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const UserPanel: React.FC = () => {
   const theme = useTheme();
@@ -15,10 +16,11 @@ const UserPanel: React.FC = () => {
   const [cardOpen, setCardOpen] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const isMobile = useMediaQuery("(max-width:767px)", { noSsr: true });
 
   if (!user) return null;
 
-  // Panel width calculation as before
+  // Panel width for desktop
   const panelWidth = `calc(${theme.serverList.width}px + ${theme.primaryDraw.width}px - 1px)`;
 
   const handleLogout = () => {
@@ -34,7 +36,20 @@ const UserPanel: React.FC = () => {
           position: "fixed",
           bottom: 0,
           left: 0,
-          width: panelWidth,
+          ...(isMobile
+            ? {
+                right: 0,
+                width: "100vw",
+                borderRadius: 0,
+                zIndex: 1000000, // Insanely high z-index on mobile
+                px: 2,
+              }
+            : {
+                width: panelWidth,
+                borderTopLeftRadius: 0,
+                borderTopRightRadius: 0,
+                zIndex: 1000000, // Insanely high z-index on desktop
+              }),
           display: "flex",
           alignItems: "center",
           justifyContent: "space-between",
@@ -42,14 +57,13 @@ const UserPanel: React.FC = () => {
           borderTop: "1px solid",
           borderColor: "divider",
           p: 1,
-          zIndex: theme.zIndex.drawer + 1,
         }}
       >
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
-            ml: 1,
+            ml: isMobile ? 0 : 1,
             cursor: "pointer",
           }}
           onClick={() => setCardOpen(true)}

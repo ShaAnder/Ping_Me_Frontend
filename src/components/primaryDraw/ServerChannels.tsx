@@ -12,7 +12,7 @@ import {
   Button,
   Divider,
 } from "@mui/material";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { ServerInterface } from "../../@types/server";
 import AddChannel from "./AddChannel";
 import { useUserAuth } from "../../hooks/useUserAuth";
@@ -29,21 +29,25 @@ export interface ServerChannelProps {
   server: ServerInterface | null;
   onChannelRefresh: () => void;
   onServerDeleted: () => void;
+  onOpenMain?: () => void;
+  isMobile?: boolean;
 }
 
-const ServerChannel = ({ server, onChannelRefresh }: ServerChannelProps) => {
+const ServerChannel = ({
+  server,
+  onChannelRefresh,
+  onOpenMain,
+}: ServerChannelProps) => {
   const theme = useTheme();
   const { serverId } = useParams();
   const { user } = useUserAuth();
   const navigate = useNavigate();
 
-  // Get the refresh functions for both contexts
   const { refreshServers } = useServerContext();
   const { refresh: refreshUserServers } = useUserServers();
 
   const isOwner = user?.id === server?.owner_id;
 
-  // Delete server modal state
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteInput, setDeleteInput] = useState("");
   const [deleting, setDeleting] = useState(false);
@@ -59,10 +63,9 @@ const ServerChannel = ({ server, onChannelRefresh }: ServerChannelProps) => {
         headers: { Authorization: `Bearer ${token}` },
       });
       setShowDeleteModal(false);
-      // Refresh both the main and user server lists
       await refreshServers();
       await refreshUserServers();
-      navigate("/"); // Redirect after deletion
+      navigate("/");
     } catch (err) {
       console.log(err);
       setDeleteError("Failed to delete server. Please try again.");
@@ -207,18 +210,21 @@ const ServerChannel = ({ server, onChannelRefresh }: ServerChannelProps) => {
             sx={{ display: "block" }}
             dense={true}
           >
-            <Link
-              to={`/server/${serverId}/${channel.id}`}
-              style={{ textDecoration: "none", color: "inherit" }}
+            <ListItemButton
+              sx={{ minHeight: 48, fontFamily: "verdana" }}
+              onClick={() => {
+                if (onOpenMain) onOpenMain();
+                setTimeout(() => {
+                  navigate(`/server/${serverId}/${channel.id}`);
+                }, 0);
+              }}
             >
-              <ListItemButton sx={{ minHeight: 48, fontFamily: "verdana" }}>
-                {channel.type === "text" ? (
-                  <>#️ {channel.name}</>
-                ) : (
-                  <>🔊 {channel.name}</>
-                )}
-              </ListItemButton>
-            </Link>
+              {channel.type === "text" ? (
+                <>#️ {channel.name}</>
+              ) : (
+                <>🔊 {channel.name}</>
+              )}
+            </ListItemButton>
           </ListItem>
         ))}
       </List>

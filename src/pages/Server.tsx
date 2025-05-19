@@ -1,5 +1,11 @@
-import { useEffect, useMemo } from "react";
-import { Box, Typography, CardMedia, CircularProgress } from "@mui/material";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Box,
+  Typography,
+  CardMedia,
+  CircularProgress,
+  useMediaQuery,
+} from "@mui/material";
 
 import Nav from "./templates/Nav";
 import ServerList from "./templates/ServerList";
@@ -21,6 +27,9 @@ const Server = () => {
     loading: loadingServers,
     refreshServers,
   } = useServerContext();
+
+  const isMobile = useMediaQuery("(max-width:767px)", { noSsr: true });
+  const [mainOpen, setMainOpen] = useState(false);
 
   const currentServer = useMemo(() => {
     if (!Array.isArray(servers) || servers.length === 0) return null;
@@ -72,19 +81,23 @@ const Server = () => {
     );
   }
 
+  // Pass this to ServerChannel or PrimaryDraw to open Main on click
+  const handleOpenMain = () => setMainOpen(true);
+  const handleCloseMain = () => setMainOpen(false);
+
   return (
     <>
       <Nav
-        rightAction={<LeaveServerButton serverId={currentServer.id} />}
+        rightAction={
+          <LeaveServerButton serverId={currentServer.id} showText={!isMobile} />
+        }
         serverName={currentServer.name}
       />
       <Box sx={{ display: "flex", width: "100%" }}>
-        {/* Sidebar - User's Servers */}
         <ServerList>
           <UserServer />
         </ServerList>
 
-        {/* Primary Drawer - Server Info and Channels */}
         <PrimaryDraw>
           <Box sx={{ mb: 0, textAlign: "center" }}>
             <CardMedia
@@ -95,6 +108,7 @@ const Server = () => {
                 width: "100%",
                 height: 137,
                 objectFit: "cover",
+                display: isMobile ? "none" : "block",
               }}
             />
           </Box>
@@ -102,15 +116,20 @@ const Server = () => {
           <ServerChannel
             server={currentServer}
             onChannelRefresh={refreshServers}
-            onServerDeleted={refreshServers} // Pass refreshServers here!
+            onServerDeleted={refreshServers}
+            onOpenMain={handleOpenMain}
+            isMobile={isMobile}
           />
         </PrimaryDraw>
 
-        {/* Main Content - Messages + Leave Button */}
-        <Main>
+        <Main
+          open={!isMobile || mainOpen}
+          onClose={isMobile ? handleCloseMain : undefined}
+        >
           <MessageInterface
             server={currentServer}
             onChannelRefresh={refreshServers}
+            isMobile={isMobile} // Pass isMobile here!
           />
         </Main>
 

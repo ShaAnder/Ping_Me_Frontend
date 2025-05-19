@@ -1,4 +1,5 @@
-import { Box } from "@mui/material";
+import { Box, useMediaQuery } from "@mui/material";
+import { useState } from "react";
 
 import Nav from "./templates/Nav";
 import ServerList from "./templates/ServerList";
@@ -11,6 +12,12 @@ import ExplorePopularServers from "../components/main/PopularServers";
 import UserPanel from "../components/shared/UserPanel";
 
 const Popular = () => {
+  const isMobile = useMediaQuery("(max-width:767px)", { noSsr: true });
+  const [mainOpen, setMainOpen] = useState(false);
+
+  const handleOpenMain = () => setMainOpen(true);
+  const handleCloseMain = () => setMainOpen(false);
+
   return (
     <>
       <Nav serverName="PingMe Home" />
@@ -21,11 +28,14 @@ const Popular = () => {
         </ServerList>
         {/* Explore Section - Primary Drawer */}
         <PrimaryDraw>
-          <Explore />
+          <Explore onOpenMain={handleOpenMain} />
         </PrimaryDraw>
 
         {/* Drawer - Popular Servers */}
-        <Main>
+        <Main
+          open={!isMobile || mainOpen}
+          onClose={isMobile ? handleCloseMain : undefined}
+        >
           <ExplorePopularServers />
         </Main>
         <UserPanel />

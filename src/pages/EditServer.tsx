@@ -157,15 +157,6 @@ const EditServer: React.FC = () => {
   const footer = (
     <Box sx={{ display: "flex", gap: 2, mt: 2 }}>
       <Button
-        variant="contained"
-        color="primary"
-        type="submit"
-        disabled={submitting}
-        sx={{ flex: 1 }}
-      >
-        {submitting ? "Saving..." : "Save Changes"}
-      </Button>
-      <Button
         variant="outlined"
         color="secondary"
         onClick={() => navigate(`/server/${serverId}`)}
@@ -174,6 +165,15 @@ const EditServer: React.FC = () => {
       >
         Cancel
       </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        type="submit"
+        disabled={submitting}
+        sx={{ flex: 1 }}
+      >
+        {submitting ? "Saving..." : "Save Changes"}
+      </Button>
     </Box>
   );
 
@@ -181,8 +181,8 @@ const EditServer: React.FC = () => {
   return (
     <Box
       sx={{
-        maxWidth: 500,
-        mx: "auto",
+        maxWidth: { xs: "95vw", sm: 500 }, // Responsive width for mobile
+        mx: { xs: 1, sm: "auto" }, // Margin on mobile, centered otherwise
         mt: 6,
         px: 0,
         py: 0,
