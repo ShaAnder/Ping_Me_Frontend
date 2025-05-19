@@ -7,7 +7,7 @@ interface MainScrollProps {
 }
 
 const ScrollContainer = styled(Box)(() => ({
-  height: `calc(100vh - 22vh)`,
+  height: `calc(100vh - 250px)`,
   overflowY: "scroll",
   "&::-webkit-scrollbar": {
     width: "8px",
