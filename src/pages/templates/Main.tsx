@@ -32,7 +32,9 @@ const Main = ({ children, open = true, onClose }: MainProps) => {
           ml: isMobile
             ? `calc(${theme.serverList.width}px)`
             : `calc(${theme.serverList.width}px + ${theme.primaryDraw.width}px)`,
-          height: `calc(100vh - ${theme.nav.height}px - 50px)`,
+          height: isMobile
+            ? `calc(100vh - ${theme.nav.height}px - 50px)`
+            : "auto",
           overflow: "hidden",
           position: isMobile ? "fixed" : "relative",
           top: isMobile ? 0 : undefined,
