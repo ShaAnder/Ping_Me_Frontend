@@ -32,9 +32,6 @@ const Main = ({ children, open = true, onClose }: MainProps) => {
           ml: isMobile
             ? `calc(${theme.serverList.width}px)`
             : `calc(${theme.serverList.width}px + ${theme.primaryDraw.width}px)`,
-          height: isMobile
-            ? `calc(100vh - ${theme.nav.height}px - -50px)`
-            : "auto",
           overflow: "hidden",
           position: isMobile ? "fixed" : "relative",
           top: isMobile ? 0 : undefined,
@@ -48,6 +45,7 @@ const Main = ({ children, open = true, onClose }: MainProps) => {
           flexDirection: "column",
           boxShadow: isMobile ? 8 : "none",
           transition: "left 0.2s, box-shadow 0.2s",
+          height: `calc(100vh - 100px)`, // <-- Your requested height
         }}
       >
         {/* Absolutely positioned close icon on mobile */}

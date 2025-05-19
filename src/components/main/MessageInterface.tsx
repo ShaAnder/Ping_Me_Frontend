@@ -197,7 +197,7 @@ const MessageInterface = ({
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
-            height: "80vh",
+
             p: 0,
           }}
         >
@@ -210,7 +210,7 @@ const MessageInterface = ({
         </Box>
       ) : (
         <>
-          <Box sx={{ overflow: "hidden", p: 0, height: `calc(100vh - 98px)` }}>
+          <Box sx={{ overflow: "hidden", p: 0 }}>
             <MainScroll>
               <List sx={{ width: "100%", bgcolor: "background.paper" }}>
                 {messages.map((msg) => (
@@ -224,9 +224,7 @@ const MessageInterface = ({
               </List>
             </MainScroll>
           </Box>
-          <Box
-            sx={{ position: "sticky", bottom: 0, mb: "50px", width: "100%" }}
-          >
+          <Box sx={{ position: "sticky", bottom: 0, width: "100%" }}>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
