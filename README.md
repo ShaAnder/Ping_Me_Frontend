@@ -122,7 +122,7 @@ As this was a larger application, i split it into two flows, and the erd while s
 ![Auth Flow Diagram](documentation/flows/auth-flow.png)
 ![Auth Flow Diagram](documentation/flows/navigation-flow.png)
 
-![ERD](documentation/diagrams/Database_ERD.png)
+![ERD](documentation/flows/erd.png)
 (this is a dumbed down version of the erd, a more comprehensive look can be found in the backend readme)
 
 # Features
