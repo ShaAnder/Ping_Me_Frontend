@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useEffect, ReactNode, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  ReactNode,
+  useCallback,
+  useRef,
+} from "react";
 import axios from "axios";
 import { BASE_URL } from "../../api/config";
 import { ServerContext } from "../../contexts/ServerContext";
@@ -10,9 +16,14 @@ export const ServerProvider: React.FC<{ children: ReactNode }> = ({
 }) => {
   const [servers, setServers] = useState<ServerInterface[] | null>(null);
   const [loading, setLoading] = useState(true);
+  // Track the latest request
+  const latestRequestId = useRef(0);
 
   const refreshServers = useCallback(async (categoryName?: string) => {
+    setServers([]); // Clear servers immediately
     setLoading(true);
+
+    const requestId = ++latestRequestId.current;
     try {
       const token = localStorage.getItem("access_token");
       if (!token) throw new Error("No access token");
@@ -21,11 +32,18 @@ export const ServerProvider: React.FC<{ children: ReactNode }> = ({
       const res = await axios.get<ServerInterface[]>(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
-      setServers(res.data);
+      // Only update state if this is the latest request
+      if (latestRequestId.current === requestId) {
+        setServers(res.data);
+      }
     } catch {
-      setServers([]);
+      if (latestRequestId.current === requestId) {
+        setServers([]);
+      }
     }
-    setLoading(false);
+    if (latestRequestId.current === requestId) {
+      setLoading(false);
+    }
   }, []);
 
   const addServer = async (data: any) => {
