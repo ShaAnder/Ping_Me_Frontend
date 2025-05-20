@@ -70,9 +70,13 @@ As this app was built using mui material no css files were used, and as such we 
 
 As this app was built in typescript validation proved difficult, as typescript props are typically seen as unexpected identifiers
 
-[alt text](err/unexpected.jpg)
+[Unexpected Error](readme_assets/err/unexpected.jpg)
 
 however basic react validation showed no errors or syntax issues, or at least the non typescript files i tested
+
+### Lighthouse
+
+![Lighthouse](readme_assets/err/lighthouse.png) validation took place as per the norm and while the results were not the best I treid to decrease the loadtimes to a more acceptible level, I think it largely fails on the fact that we are loading realtime websockets as well as live messaging and heroku does not like that.
 
 ### BUGS
 
