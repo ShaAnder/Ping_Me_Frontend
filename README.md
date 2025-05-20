@@ -119,10 +119,10 @@ to build huge media query css files
 
 As this was a larger application, i split it into two flows, and the erd while simple here can be covered more in depth in the backend erd
 
-![Auth Flow Diagram](documentation/flows/auth-flow.png)
-![Auth Flow Diagram](documentation/flows/navigation-flow.png)
+![Auth Flow Diagram](readme_assets/flows/auth-flow.png)
+![Auth Flow Diagram](readme_assets/flows/navigation-flow.png)
 
-![ERD](documentation/flows/erd.png)
+![ERD](readme_assets/flows/erd.png)
 (this is a dumbed down version of the erd, a more comprehensive look can be found in the backend readme)
 
 # Features
@@ -131,17 +131,36 @@ Below you can see all the features present in this app
 
 ![Create / Login to an Account](readme_assets/examples/authenticate.png)
 
+The main landing page so to speak, users will be directed here if they need to login / they are unauthorized to do so
+from the login page they have access to creating an account, resetting their password and resending verification emails
+
 ![View / edit Profile](readme_assets/examples/viewprofile.png)
+
+As a user expects to be able to edit their details and account the app comes with full crud functionality on the profile
+allowing a user to create edit and delete their account should they so choose
 
 ![Explore Categories](readme_assets/examples/explore.png)
 
+This is where the use can go and explore the various server categories on offer to find new places to check out
+
 ![Server List](readme_assets/examples/serverlist.png)
+
+The server list is the main bar on the left of the app, this hosts all the users servers and allows them to selecte
+which server to go into at any time
 
 ![Edit / Add forms](readme_assets/examples/editforms.png)
 
+The app is powered behind the scenes by forms that allow the user to edit and add to it in various ways, this is thanks
+to a formik integrated form component designed by me that takes custom input fields
+
 ![Chat Room](readme_assets/examples/chatroom.png)
 
+This is where users can chat with each other, the app hosts a backend redis powered websocket connector that sends and
+broadcasts messages in real time
+
 ![Modals in action](readme_assets/examples/modal.png)
+
+Much like the form the app utilizes a custom modal to give users clear visual feedback whenever they need it.
 
 ## Agile Methodology
 
@@ -208,57 +227,6 @@ I found this setup to be uniquely ideal and allowed us to have an efficient modu
 Using MUI materials drawer, themes and rapid development and building systems the main pages were built out as templates to hold the content and ensure responsive design, built to accept react components as children allowing us to build out our platform and use the same layout consistently, we could effectively build a plug and play system where the (for example) [home](src/pages/Home.tsx) used the exact same layout as the [server](src/pages/Server.tsx) but we just plugged in different components and had an entirely different page
 
 There are more examples of reusable components in the [shared](src/components/shared) folder
-
-## Testing
-
-Rather than build out a separate testing.md file I opted to build it into here as we hav separate tests for the backend readme too
-
-The app underwent comprehensive testing during development to ensure each feature worked according to specifcations perfectly
-For frontend development I also ran diagnostic and dummy packet tests through postman to ensure that it connected and recived the data
-
-The app was also tested on a variety of devices and sizes and found to be working perfectly, a few minor responsive issues aside
-
-Below you can find an exhaustive list of tests done on the app to ensure its standards were up to the test
-
-|                 TEST                  |             Expected outcome              |              Actual outcome               | Pass/Fail |
-| :-----------------------------------: | :---------------------------------------: | :---------------------------------------: | :-------: |
-|       Registration form renders       |      Registration fields are visible      |      Registration fields are visible      |   Pass    |
-|          Registration errors          |          Shows validation error           |          Shows validation error           |   Pass    |
-|     Registration with valid data      | Account created, verification email sent  | Account created, verification email sent  |   Pass    |
-|          Email verification           |             User is verified              |             User is verified              |   Pass    |
-|       Email verification resend       |             Sends Email again             |             Sends Email again             |   Pass    |
-|          Login form renders           |         Login fields are visible          |         Login fields are visible          |   Pass    |
-|    Login with invalid credentials     |            Shows error message            |            Shows error message            |   Pass    |
-|     Login with unverified account     |    Blocks login, prompts verification     |    Blocks login, prompts verification     |   Pass    |
-|     Login with valid credentials      |             User is logged in             |             User is logged in             |   Pass    |
-|                Logout                 |      User is logged out, redirected       |      User is logged out, redirected       |   Pass    |
-|           Home page renders           |             Home page renders             |             Home page renders             |   Pass    |
-|     Edit profile with valid data      |       Profile updated successfully        |       Profile updated successfully        |   Pass    |
-|    Edit profile with invalid data     |          Shows validation error           |          Shows validation error           |   Pass    |
-|            Delete account             | Account is deleted and user is logged out | Account is deleted and user is logged out |   Pass    |
-|           Server list loads           |   All servers user is in are displayed    |   All servers user is in are displayed    |   Pass    |
-|             Create server             |        New server appears in list         |        New server appears in list         |   Pass    |
-|   Create server with duplicate name   |            Shows error message            |            Shows error message            |   Pass    |
-|              Edit server              |         Server name/icon updated          |         Server name/icon updated          |   Pass    |
-|             Delete server             |         Server removed from list          |         Server removed from list          |   Pass    |
-| Non-owner tries to edit/delete server |             Action is blocked             |             Action is blocked             |   Pass    |
-|          Channel list loads           |   All channels in server are displayed    |   All channels in server are displayed    |   Pass    |
-|            Create channel             |         Channel appears in server         |         Channel appears in server         |   Pass    |
-|             Edit channel              |         Channel name/type updated         |         Channel name/type updated         |   Pass    |
-|            Delete channel             |        Channel removed from server        |        Channel removed from server        |   Pass    |
-|  Non-admin tries to manage channels   |             Action is blocked             |             Action is blocked             |   Pass    |
-|          Category list loads          |       All categories are displayed        |       All categories are displayed        |   Pass    |
-|      Filter servers by category       |        Only matching servers shown        |        Only matching servers shown        |   Pass    |
-|     Theme toggle switches to dark     |         UI switches to dark mode          |         UI switches to dark mode          |   Pass    |
-|    Theme toggle switches to light     |         UI switches to light mode         |         UI switches to light mode         |   Pass    |
-|      Theme persists after reload      |         Theme remains as selected         |         Theme remains as selected         |   Pass    |
-| Access protected page unauthenticated |          Redirects to login/404           |          Redirects to login/404           |   Pass    |
-|    Access admin-only page as user     |             Access is denied              |             Access is denied              |   Pass    |
-|         404 on unknown route          |             404 page is shown             |             404 page is shown             |   Pass    |
-|     Loading spinner on data fetch     |      Spinner is visible during load       |      Spinner is visible during load       |   Pass    |
-|     Error boundary on API failure     |        Error message is displayed         |        Error message is displayed         |   Pass    |
-|   All forms accessible by keyboard    |         Keyboard navigation works         |         Keyboard navigation works         |   Pass    |
-|     All forms have proper labels      |       Accessibility labels present        |       Accessibility labels present        |   Pass    |
 
 ## Future Features
 
