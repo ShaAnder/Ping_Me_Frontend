@@ -23,6 +23,7 @@ import ServerOwnerProtectedRoute from "./services/ServerOwnerProtectedRoute";
 import AddServer from "./pages/AddServer";
 import { CategoriesProvider } from "./services/providers/CatgoryProvider";
 import { MessagesProvider } from "./services/providers/MessagesProvider";
+import ErrorPage from "./pages/ErrorPage";
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -38,8 +39,9 @@ const router = createBrowserRouter(
 						<Home />
 					</ProtectedRoute>
 				}
+				errorElement={<ErrorPage />}
 			/>
-			<Route path="/profile/edit/" element={<EditProfile />} />
+			<Route path="/profile/edit/" element={<EditProfile />} errorElement={<ErrorPage />} />
 			<Route
 				path="/server/:serverId/:channelId?"
 				element={
@@ -47,6 +49,7 @@ const router = createBrowserRouter(
 						<Server />
 					</ProtectedRoute>
 				}
+				errorElement={<ErrorPage />}
 			/>
 			<Route
 				path="/server/:serverId/edit"
@@ -55,6 +58,7 @@ const router = createBrowserRouter(
 						<EditServer />
 					</ServerOwnerProtectedRoute>
 				}
+				errorElement={<ErrorPage />}
 			/>
 			<Route
 				path="/explore/:categoryName"
@@ -63,6 +67,7 @@ const router = createBrowserRouter(
 						<Popular />
 					</ProtectedRoute>
 				}
+				errorElement={<ErrorPage />}
 			/>
 			<Route
 				path="/add_server"
@@ -71,6 +76,12 @@ const router = createBrowserRouter(
 						<AddServer />
 					</ProtectedRoute>
 				}
+				errorElement={<ErrorPage />}
+			/>
+			{/* Catch-all route for 404s */}
+			<Route 
+				path="*" 
+				element={<ErrorPage error={{ status: 404, message: "Page not found" }} />} 
 			/>
 		</>
 	)

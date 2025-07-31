@@ -2,7 +2,8 @@ import React from "react";
 import { Navigate, useParams } from "react-router-dom";
 import { useUserAuth } from "../hooks/useUserAuth";
 import { useServerContext } from "../hooks/useServerContext";
-import { Box, CircularProgress, Alert } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
+import ErrorPage from "../pages/ErrorPage";
 
 interface ServerOwnerProtectedRouteProps {
   children: React.ReactNode;
@@ -43,40 +44,12 @@ const ServerOwnerProtectedRoute = ({ children }: ServerOwnerProtectedRouteProps)
 
   // If server not found or user is not the owner
   if (!server) {
-    return (
-      <Box
-        sx={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          p: 4,
-        }}
-      >
-        <Alert severity="error">
-          Server not found or you don't have permission to access this page.
-        </Alert>
-      </Box>
-    );
+    return <ErrorPage error={{ status: 404, message: "Server not found" }} />;
   }
 
   // Check if the current user is the owner
   if (server.owner_id !== user.id) {
-    return (
-      <Box
-        sx={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          p: 4,
-        }}
-      >
-        <Alert severity="error">
-          You don't have permission to edit this server. Only the server owner can make changes.
-        </Alert>
-      </Box>
-    );
+    return <ErrorPage error={{ status: 403, message: "You don't have permission to edit this server" }} />;
   }
 
   return <>{children}</>;
