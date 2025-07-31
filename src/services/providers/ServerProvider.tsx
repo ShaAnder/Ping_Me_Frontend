@@ -10,6 +10,7 @@ import axios from "axios";
 import { BASE_URL } from "../../api/config";
 import { ServerContext } from "../../contexts/ServerContext";
 import { ServerInterface } from "../../@types/server";
+import { extractArrayFromResponse } from "../../utils/responseUtils";
 
 export const ServerProvider: React.FC<{ children: ReactNode }> = ({
   children,
@@ -29,12 +30,14 @@ export const ServerProvider: React.FC<{ children: ReactNode }> = ({
       if (!token) throw new Error("No access token");
       let url = `${BASE_URL}/api/servers/`;
       if (categoryName) url += `?category=${encodeURIComponent(categoryName)}`;
-      const res = await axios.get<ServerInterface[]>(url, {
+      const res = await axios.get(url, {
         headers: { Authorization: `Bearer ${token}` },
       });
       // Only update state if this is the latest request
       if (latestRequestId.current === requestId) {
-        setServers(res.data);
+        // Handle both paginated and direct array responses
+        const serverData = extractArrayFromResponse<ServerInterface>(res.data);
+        setServers(serverData);
       }
     } catch {
       if (latestRequestId.current === requestId) {
