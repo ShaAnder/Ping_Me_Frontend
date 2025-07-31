@@ -123,13 +123,12 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ error, children }) => {
 			<Button
 				variant="contained"
 				onClick={handleGoBack}
-				size="large"
 				sx={{
-					"px": 6,
-					"py": 2,
+					"px": 4,
+					"py": 1.5,
 					"borderRadius": 2,
 					"textTransform": "none",
-					"fontSize": "1.1rem",
+					"fontSize": "1rem",
 					"backgroundColor": theme.palette.primary.main,
 					"&:hover": {
 						backgroundColor: theme.palette.primary.dark,
