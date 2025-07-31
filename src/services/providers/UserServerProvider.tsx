@@ -3,7 +3,6 @@ import axios from "axios";
 import { ServerInterface } from "../../@types/server";
 import { BASE_URL } from "../../api/config";
 import { UserServerContext } from "../../contexts/UserServerContext";
-import { extractArrayFromResponse } from "../../utils/responseUtils";
 
 export const UserServerProvider: React.FC<{ children: ReactNode }> = ({
 	children,
@@ -18,9 +17,7 @@ export const UserServerProvider: React.FC<{ children: ReactNode }> = ({
 			const res = await axios.get(`${BASE_URL}/api/account/my_servers/`, {
 				headers: { Authorization: `Bearer ${token}` },
 			});
-			// Handle both paginated and direct array responses
-			const serverData = extractArrayFromResponse<ServerInterface>(res.data);
-			setServers(serverData);
+			setServers(res.data);
 		} catch {
 			setServers([]);
 		}
