@@ -70,7 +70,7 @@ As this app was built using mui material no css files were used, and as such we 
 
 As this app was built in typescript validation proved difficult, as typescript props are typically seen as unexpected identifiers
 
-[Unexpected Error](readme_assets/err/unexpected.jpg)
+![Unexpected Error](readme_assets/err/unexpected.png)
 
 however basic react validation showed no errors or syntax issues, or at least the non typescript files i tested
 
