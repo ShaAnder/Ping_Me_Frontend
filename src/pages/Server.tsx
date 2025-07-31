@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import {
-  Box,
-  Typography,
-  CardMedia,
-  CircularProgress,
-  useMediaQuery,
+	Box,
+	Typography,
+	CardMedia,
+	CircularProgress,
+	useMediaQuery,
 } from "@mui/material";
 
 import Nav from "./templates/Nav";
@@ -16,127 +16,141 @@ import MessageInterface from "../components/main/MessageInterface";
 import ServerChannel from "../components/primaryDraw/ServerChannels";
 import UserPanel from "../components/shared/UserPanel";
 import { useServerContext } from "../hooks/useServerContext";
+import { useUserServers } from "../hooks/useUserServers";
 import { useParams, useNavigate } from "react-router-dom";
 import LeaveServerButton from "../components/shared/LeaveServerButton";
 
 const Server = () => {
-  const navigate = useNavigate();
-  const { serverId, channelId } = useParams();
-  const {
-    servers,
-    loading: loadingServers,
-    refreshServers,
-  } = useServerContext();
+	const navigate = useNavigate();
+	const { serverId, channelId } = useParams();
+	const {
+		servers: publicServers,
+		loading: loadingPublicServers,
+		refreshServers,
+	} = useServerContext();
+	const { servers: userServers, loading: loadingUserServers } =
+		useUserServers();
 
-  const isMobile = useMediaQuery("(max-width:767px)", { noSsr: true });
-  const [mainOpen, setMainOpen] = useState(false);
+	const isMobile = useMediaQuery("(max-width:767px)", { noSsr: true });
+	const [mainOpen, setMainOpen] = useState(false);
 
-  const currentServer = useMemo(() => {
-    if (!Array.isArray(servers) || servers.length === 0) return null;
-    return servers.find((s) => String(s.id) === String(serverId)) || null;
-  }, [servers, serverId]);
+	const currentServer = useMemo(() => {
+		// Check user servers first (most likely), then public servers
+		const userServer = userServers?.find(
+			(s) => String(s.id) === String(serverId)
+		);
+		if (userServer) return userServer;
 
-  useEffect(() => {
-    if (
-      !loadingServers &&
-      currentServer &&
-      channelId &&
-      !currentServer.channel_server.some(
-        (channel) => String(channel.id) === String(channelId)
-      )
-    ) {
-      navigate(`/server/${serverId}`);
-    }
-  }, [loadingServers, currentServer, channelId, navigate, serverId]);
+		const publicServer = publicServers?.find(
+			(s) => String(s.id) === String(serverId)
+		);
+		return publicServer || null;
+	}, [userServers, publicServers, serverId]);
 
-  if (loadingServers || servers === null) {
-    return (
-      <Box
-        sx={{
-          width: "100vw",
-          height: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
+	// Loading if either context is loading
+	const isLoading = loadingPublicServers || loadingUserServers;
 
-  if (!currentServer) {
-    return (
-      <Box
-        sx={{
-          width: "100vw",
-          height: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Typography color="error">Server not found.</Typography>
-      </Box>
-    );
-  }
+	useEffect(() => {
+		if (
+			!isLoading &&
+			currentServer &&
+			channelId &&
+			!currentServer.channel_server.some(
+				(channel) => String(channel.id) === String(channelId)
+			)
+		) {
+			navigate(`/server/${serverId}`);
+		}
+	}, [isLoading, currentServer, channelId, navigate, serverId]);
 
-  // Pass this to ServerChannel or PrimaryDraw to open Main on click
-  const handleOpenMain = () => setMainOpen(true);
-  const handleCloseMain = () => setMainOpen(false);
+	if (isLoading) {
+		return (
+			<Box
+				sx={{
+					width: "100vw",
+					height: "100vh",
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+				}}
+			>
+				<CircularProgress />
+			</Box>
+		);
+	}
 
-  return (
-    <>
-      <Nav
-        rightAction={
-          <LeaveServerButton serverId={currentServer.id} showText={!isMobile} />
-        }
-        serverName={currentServer.name}
-      />
-      <Box sx={{ display: "flex", width: "100%" }}>
-        <ServerList>
-          <UserServer />
-        </ServerList>
+	if (!currentServer) {
+		return (
+			<Box
+				sx={{
+					width: "100vw",
+					height: "100vh",
+					display: "flex",
+					alignItems: "center",
+					justifyContent: "center",
+				}}
+			>
+				<Typography color="error">Server not found.</Typography>
+			</Box>
+		);
+	}
 
-        <PrimaryDraw>
-          <Box sx={{ mb: 0, textAlign: "center" }}>
-            <CardMedia
-              component="img"
-              image={currentServer.server_image_urls?.banner_image_url}
-              alt={currentServer.name}
-              sx={{
-                width: "100%",
-                height: 137,
-                objectFit: "cover",
-                display: isMobile ? "none" : "block",
-              }}
-            />
-          </Box>
+	// Pass this to ServerChannel or PrimaryDraw to open Main on click
+	const handleOpenMain = () => setMainOpen(true);
+	const handleCloseMain = () => setMainOpen(false);
 
-          <ServerChannel
-            server={currentServer}
-            onChannelRefresh={refreshServers}
-            onServerDeleted={refreshServers}
-            onOpenMain={handleOpenMain}
-            isMobile={isMobile}
-          />
-        </PrimaryDraw>
+	return (
+		<>
+			<Nav
+				rightAction={
+					<LeaveServerButton serverId={currentServer.id} showText={!isMobile} />
+				}
+				serverName={currentServer.name}
+			/>
+			<Box sx={{ display: "flex", width: "100%" }}>
+				<ServerList>
+					<UserServer />
+				</ServerList>
 
-        <Main
-          open={!isMobile || mainOpen}
-          onClose={isMobile ? handleCloseMain : undefined}
-        >
-          <MessageInterface
-            server={currentServer}
-            onChannelRefresh={refreshServers}
-            isMobile={isMobile} // Pass isMobile here!
-          />
-        </Main>
+				<PrimaryDraw>
+					<Box sx={{ mb: 0, textAlign: "center" }}>
+						<CardMedia
+							component="img"
+							image={currentServer.server_image_urls?.banner_image_url}
+							alt={currentServer.name}
+							sx={{
+								width: "100%",
+								height: 137,
+								objectFit: "cover",
+								display: isMobile ? "none" : "block",
+							}}
+						/>
+					</Box>
 
-        <UserPanel />
-      </Box>
-    </>
-  );
+					<ServerChannel
+						server={currentServer}
+						onChannelRefresh={refreshServers}
+						onServerDeleted={refreshServers}
+						onOpenMain={handleOpenMain}
+						isMobile={isMobile}
+					/>
+				</PrimaryDraw>
+
+				<Main
+					open={!isMobile || mainOpen}
+					onClose={isMobile ? handleCloseMain : undefined}
+				>
+					<MessageInterface
+						server={currentServer}
+						onChannelRefresh={refreshServers}
+						isMobile={isMobile} // Pass isMobile here!
+					/>
+				</Main>
+
+				<UserPanel />
+			</Box>
+		</>
+	);
 };
 
 export default Server;

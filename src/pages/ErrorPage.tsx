@@ -31,7 +31,8 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ error, children }) => {
 						Oops! Page Not Found
 					</Typography>
 					<Typography variant="body1" color="text.secondary">
-						We couldn't find the page you're looking for. Don't worry, it happens to the best of us!
+						We couldn't find the page you're looking for. Don't worry, it
+						happens to the best of us!
 					</Typography>
 				</>
 			);
@@ -44,7 +45,8 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ error, children }) => {
 						Access Restricted
 					</Typography>
 					<Typography variant="body1" color="text.secondary">
-						You don't have permission to view this content. Try logging in or contact support if you think this is a mistake.
+						You don't have permission to view this content. Try logging in or
+						contact support if you think this is a mistake.
 					</Typography>
 				</>
 			);
@@ -88,26 +90,28 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ error, children }) => {
 			}}
 		>
 			{/* Logo + App Name on same line */}
-			<Box sx={{ 
-				display: "flex", 
-				alignItems: "center", 
-				gap: 2, 
-				mb: 3 
-			}}>
-				<img 
-					src={pingMeLogo} 
-					alt="Ping Me" 
-					style={{ 
-						width: "60px", 
-						height: "60px", 
-						objectFit: "contain" 
-					}} 
+			<Box
+				sx={{
+					display: "flex",
+					alignItems: "center",
+					gap: 2,
+					mb: 3,
+				}}
+			>
+				<img
+					src={pingMeLogo}
+					alt="Ping Me"
+					style={{
+						width: "60px",
+						height: "60px",
+						objectFit: "contain",
+					}}
 				/>
-				<Typography 
-					variant="h3" 
-					sx={{ 
+				<Typography
+					variant="h3"
+					sx={{
 						fontWeight: "bold",
-						color: theme.palette.primary.main 
+						color: theme.palette.primary.main,
 					}}
 				>
 					Ping Me
@@ -115,9 +119,7 @@ const ErrorPage: React.FC<ErrorPageProps> = ({ error, children }) => {
 			</Box>
 
 			{/* Error Message */}
-			<Box sx={{ mb: 4, maxWidth: 500 }}>
-				{getErrorMessage()}
-			</Box>
+			<Box sx={{ mb: 4, maxWidth: 500 }}>{getErrorMessage()}</Box>
 
 			{/* Back Button */}
 			<Button

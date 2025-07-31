@@ -41,7 +41,11 @@ const router = createBrowserRouter(
 				}
 				errorElement={<ErrorPage />}
 			/>
-			<Route path="/profile/edit/" element={<EditProfile />} errorElement={<ErrorPage />} />
+			<Route
+				path="/profile/edit/"
+				element={<EditProfile />}
+				errorElement={<ErrorPage />}
+			/>
 			<Route
 				path="/server/:serverId/:channelId?"
 				element={
@@ -79,9 +83,11 @@ const router = createBrowserRouter(
 				errorElement={<ErrorPage />}
 			/>
 			{/* Catch-all route for 404s */}
-			<Route 
-				path="*" 
-				element={<ErrorPage error={{ status: 404, message: "Page not found" }} />} 
+			<Route
+				path="*"
+				element={
+					<ErrorPage error={{ status: 404, message: "Page not found" }} />
+				}
 			/>
 		</>
 	)
