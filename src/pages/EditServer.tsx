@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useRef, useState } from "react";
 import {
   Box,
@@ -9,17 +8,24 @@ import {
 } from "@mui/material";
 import Form, { Field } from "../components/shared/Form";
 import { validateFormFields } from "../utils/validateForm";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { BASE_URL } from "../api/config";
 import { useNavigate, useParams } from "react-router-dom";
 import { ServerInterface } from "../@types/server";
+import { useUserAuth } from "../hooks/useUserAuth";
 
 import avatarPlaceholder from "../assets/img/AvatarPlaceholder.jpg";
 import bannerPlaceholder from "../assets/img/BannerPlaceholder.jpeg";
 
+// Type for form submission actions
+interface FormActions {
+  setErrors: (errors: Record<string, string>) => void;
+}
+
 const EditServer: React.FC = () => {
   const { serverId } = useParams();
   const navigate = useNavigate();
+  const { user } = useUserAuth();
   const [server, setServer] = useState<ServerInterface | null>(null);
   const [loading, setLoading] = useState(true);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -74,6 +80,17 @@ const EditServer: React.FC = () => {
     );
   }
 
+  // Check if the current user is the owner of the server
+  if (user && server.owner_id !== user.id) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 8 }}>
+        <Alert severity="error">
+          You don't have permission to edit this server. Only the server owner can make changes.
+        </Alert>
+      </Box>
+    );
+  }
+
   // Only include name and description in the form fields
   const serverFields: Field[] = [
     { name: "name", label: "Server Name", type: "text", required: true },
@@ -116,7 +133,7 @@ const EditServer: React.FC = () => {
     }
   };
 
-  const onSubmit = async (values: typeof initialValues, { setErrors }: any) => {
+  const onSubmit = async (values: typeof initialValues, { setErrors }: FormActions) => {
     setSubmitError(null);
     setSubmitSuccess(null);
     setSubmitting(true);
@@ -142,9 +159,10 @@ const EditServer: React.FC = () => {
       });
       setSubmitSuccess("Server updated successfully!");
       setTimeout(() => navigate(`/server/${serverId}`), 1000);
-    } catch (error: any) {
-      if (error.response?.data) {
-        setErrors(error.response.data);
+    } catch (error: unknown) {
+      const axiosError = error as AxiosError<Record<string, string>>;
+      if (axiosError.response?.data) {
+        setErrors(axiosError.response.data);
       } else {
         setSubmitError("An error occurred. Please try again.");
       }

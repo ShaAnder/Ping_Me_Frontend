@@ -19,6 +19,7 @@ import { ServerProvider } from "./services/providers/ServerProvider";
 import { UserServerProvider } from "./services/providers/UserServerProvider";
 import EditServer from "./pages/EditServer";
 import ProtectedRoute from "./services/ProtectedRoute";
+import ServerOwnerProtectedRoute from "./services/ServerOwnerProtectedRoute";
 import AddServer from "./pages/AddServer";
 import { CategoriesProvider } from "./services/providers/CatgoryProvider";
 import { MessagesProvider } from "./services/providers/MessagesProvider";
@@ -50,9 +51,9 @@ const router = createBrowserRouter(
 			<Route
 				path="/server/:serverId/edit"
 				element={
-					<ProtectedRoute>
+					<ServerOwnerProtectedRoute>
 						<EditServer />
-					</ProtectedRoute>
+					</ServerOwnerProtectedRoute>
 				}
 			/>
 			<Route
