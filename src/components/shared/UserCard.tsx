@@ -10,6 +10,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import DarkModeSwitch from "../../utils/DarkModeToggle";
 import { useTheme } from "@mui/material/styles";
 import { UserInterface } from "../../@types/user";
+import DeleteAccountButton from "./DeleteAccountButton";
 
 interface UserCardProps {
   open: boolean;
@@ -155,6 +156,7 @@ const UserCard: React.FC<UserCardProps> = ({
           >
             Edit Profile
           </Button>
+          <DeleteAccountButton onClose={onClose} />
           <Box
             sx={{
               display: "flex",
