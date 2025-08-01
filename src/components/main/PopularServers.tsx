@@ -3,12 +3,14 @@ import { Box, Typography, Grid, Container } from "@mui/material";
 import { useParams } from "react-router-dom";
 import { useServerContext } from "../../hooks/useServerContext";
 import { useUserServers } from "../../hooks/useUserServers";
+import { useCategoriesContext } from "../../hooks/useCategoryContext";
 import Modal from "../../components/shared/Modal";
 import axios from "axios";
 import { BASE_URL } from "../../api/config";
 import { ServerInterface } from "../../@types/server";
 import PopularServerCard from "./PopularServerCard";
 import MainScroll from "../../components/main/MainScroll";
+import ErrorPage from "../../pages/ErrorPage";
 
 const ExplorePopularServers: React.FC = () => {
   const { categoryName } = useParams();
@@ -22,6 +24,10 @@ const ExplorePopularServers: React.FC = () => {
     loading: userServersLoading,
     refresh: refreshUserServers,
   } = useUserServers();
+  const {
+    categories,
+    loading: categoriesLoading,
+  } = useCategoriesContext();
 
   const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [selectedServer, setSelectedServer] = useState<ServerInterface | null>(
@@ -32,6 +38,11 @@ const ExplorePopularServers: React.FC = () => {
   );
   const [actionInProgress, setActionInProgress] = useState<number | null>(null);
 
+  // Check if the category exists
+  const categoryExists = categories.some(
+    (category) => category.name.toLowerCase() === categoryName?.toLowerCase()
+  );
+
   useEffect(() => {
     setJoinedServerIds(new Set(userServers.map((s) => s.id)));
   }, [userServers]);
@@ -40,6 +51,18 @@ const ExplorePopularServers: React.FC = () => {
     refreshServers(categoryName);
     // eslint-disable-next-line
   }, [categoryName]);
+
+  // Show error page if category doesn't exist and we're done loading
+  if (!categoriesLoading && categoryName && !categoryExists) {
+    return (
+      <ErrorPage 
+        error={{ 
+          status: 404, 
+          message: `Category "${categoryName}" doesn't exist` 
+        }} 
+      />
+    );
+  }
 
   const handleShowServerDetails = (server: ServerInterface) => {
     setSelectedServer(server);
