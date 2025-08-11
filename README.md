@@ -228,6 +228,10 @@ Using MUI materials drawer, themes and rapid development and building systems th
 
 There are more examples of reusable components in the [shared](src/components/shared) folder
 
+## Testing
+
+Full testing can be found in the testing.md file linked [here](https://github.com/ShaAnder/Ping_Me_Frontend/blob/main/TESTING.md)
+
 ## Future Features
 
 - member lists on servers
