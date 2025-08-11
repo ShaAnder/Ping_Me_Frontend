@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { Box, CardMedia, CircularProgress, useMediaQuery } from "@mui/material";
 
 import Nav from "./templates/Nav";
@@ -23,8 +23,11 @@ const Server = () => {
 		loading: loadingPublicServers,
 		refreshServers,
 	} = useServerContext();
-	const { servers: userServers, loading: loadingUserServers } =
-		useUserServers();
+	const {
+		servers: userServers,
+		loading: loadingUserServers,
+		refresh: refreshUserServers,
+	} = useUserServers();
 
 	const isMobile = useMediaQuery("(max-width:767px)", { noSsr: true });
 	const [mainOpen, setMainOpen] = useState(false);
@@ -41,6 +44,10 @@ const Server = () => {
 		);
 		return publicServer || null;
 	}, [userServers, publicServers, serverId]);
+
+	const refreshAllServers = useCallback(async () => {
+		await Promise.all([refreshServers?.(), refreshUserServers?.()]);
+	}, [refreshServers, refreshUserServers]);
 
 	// Loading if either context is loading
 	const isLoading = loadingPublicServers || loadingUserServers;
@@ -119,8 +126,8 @@ const Server = () => {
 
 					<ServerChannel
 						server={currentServer}
-						onChannelRefresh={refreshServers}
-						onServerDeleted={refreshServers}
+						onChannelRefresh={refreshAllServers}
+						onServerDeleted={refreshAllServers}
 						onOpenMain={handleOpenMain}
 						isMobile={isMobile}
 					/>
@@ -132,7 +139,7 @@ const Server = () => {
 				>
 					<MessageInterface
 						server={currentServer}
-						onChannelRefresh={refreshServers}
+						onChannelRefresh={refreshAllServers}
 						isMobile={isMobile} // Pass isMobile here!
 					/>
 				</Main>
