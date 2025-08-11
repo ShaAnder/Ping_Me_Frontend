@@ -1,11 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-	Box,
-	Typography,
-	CardMedia,
-	CircularProgress,
-	useMediaQuery,
-} from "@mui/material";
+import { Box, CardMedia, CircularProgress, useMediaQuery } from "@mui/material";
 
 import Nav from "./templates/Nav";
 import ServerList from "./templates/ServerList";
@@ -19,6 +13,7 @@ import { useServerContext } from "../hooks/useServerContext";
 import { useUserServers } from "../hooks/useUserServers";
 import { useParams, useNavigate } from "react-router-dom";
 import LeaveServerButton from "../components/shared/LeaveServerButton";
+import ErrorPage from "./ErrorPage";
 
 const Server = () => {
 	const navigate = useNavigate();
@@ -81,17 +76,12 @@ const Server = () => {
 
 	if (!currentServer) {
 		return (
-			<Box
-				sx={{
-					width: "100vw",
-					height: "100vh",
-					display: "flex",
-					alignItems: "center",
-					justifyContent: "center",
+			<ErrorPage
+				error={{
+					status: 404,
+					message: "That server doesn't exist or was removed.",
 				}}
-			>
-				<Typography color="error">Server not found.</Typography>
-			</Box>
+			/>
 		);
 	}
 
